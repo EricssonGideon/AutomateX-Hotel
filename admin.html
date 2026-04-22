@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | AutomateX AI Hotel System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body data-page="admin" class="page-shell">
+<div class="toast-container" id="toastContainer"></div><div class="notification-stack" id="notificationStack"></div>
+<div class="page active" id="adminPage">
+  <div class="sidebar" id="adminSidebar">
+    <div class="sidebar-logo"><div class="nav-logo"><img src="./Images/logo.png" alt="AutomateX logo" class="brand-logo-img small"><span class="brand-logo-text"><span>AutomateX<span>.</span></span><span class="brand-logo-sub">AI Hotel Suite</span></span></div><p>Hotel Management System</p></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <div class="sidebar-item active" data-panel="dashboard"><i class="fa fa-chart-pie"></i>Dashboard</div>
+      <div class="sidebar-item" data-panel="bookings"><i class="fa fa-calendar-check"></i>Bookings</div>
+      <div class="sidebar-item" data-panel="calendar"><i class="fa fa-calendar-days"></i>Calendar</div>
+      <div class="sidebar-item" data-panel="rooms"><i class="fa fa-bed"></i>Rooms</div>
+      <div class="sidebar-item" data-panel="customers"><i class="fa fa-users"></i>Customers</div>
+      <div class="sidebar-section">AI</div>
+      <div class="sidebar-item" data-panel="insights"><i class="fa fa-brain"></i>AI Insights</div>
+      <div class="sidebar-section">System</div>
+      <a class="sidebar-item" href="./index.html"><i class="fa fa-globe"></i>View Website</a>
+    </nav>
+  </div>
+  <div class="admin-main">
+    <div class="admin-topbar"><div style="display:flex;align-items:center;gap:12px;"><button class="admin-menu-btn" onclick="toggleSidebar()" aria-label="Toggle admin menu"><i class="fa fa-bars"></i></button><div class="topbar-title" id="adminTitle">Dashboard Overview</div></div><div class="topbar-right"><select class="toolbar-select" id="languageToggle"><option value="en">English</option><option value="si">Sinhala</option><option value="ta">Tamil</option></select><button class="toolbar-btn" id="demoModeBtn"><i class="fa fa-wand-magic-sparkles"></i><span>Enable Demo Mode</span></button><div class="role-pill" id="rolePill">Admin Access</div><div class="topbar-btn"><i class="fa fa-search"></i></div><div class="topbar-btn"><i class="fa fa-bell"></i><div class="notif-badge">3</div></div><div class="admin-avatar" title="Admin User">AX</div></div></div>
+    <div class="admin-content">
+      <div class="admin-panel active" id="panel-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card blue"><div class="stat-card-icon"><i class="fa fa-calendar-check"></i></div><div class="stat-card-num" id="statBookings">47</div><div class="stat-card-label">Total Bookings</div><div class="stat-card-change"><i class="fa fa-arrow-up"></i> 12% this week</div></div>
+          <div class="stat-card purple"><div class="stat-card-icon"><i class="fa fa-dollar-sign"></i></div><div class="stat-card-num" id="statRevenue">$24.8k</div><div class="stat-card-label">Revenue (Month)</div><div class="stat-card-change"><i class="fa fa-arrow-up"></i> 8.4% vs last month</div></div>
+          <div class="stat-card gold"><div class="stat-card-icon"><i class="fa fa-bed"></i></div><div class="stat-card-num" id="statRooms">12</div><div class="stat-card-label">Active Rooms</div><div class="stat-card-change"><i class="fa fa-arrow-up"></i> 3 new this month</div></div>
+          <div class="stat-card red"><div class="stat-card-icon"><i class="fa fa-users"></i></div><div class="stat-card-num" id="statCustomers">183</div><div class="stat-card-label">Total Customers</div><div class="stat-card-change"><i class="fa fa-arrow-up"></i> 24 new this week</div></div>
+        </div>
+        <div class="charts-grid"><div class="chart-card"><div class="chart-title">Weekly Bookings <span style="font-size:.8rem;color:var(--text3);font-weight:400">Apr 2025</span></div><div class="chart-sub">Bookings per day this week</div><div class="bar-chart" id="weeklyChart"></div></div><div class="chart-card"><div class="chart-title">Room Types</div><div class="chart-sub">Booking distribution</div><div class="donut-wrap"><svg class="donut-svg" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="#0d1530" stroke-width="20"/><circle cx="60" cy="60" r="50" fill="none" stroke="#00d4ff" stroke-width="20" stroke-dasharray="94.2 220" stroke-dashoffset="-31" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="50" fill="none" stroke="#7b61ff" stroke-width="20" stroke-dasharray="62.8 220" stroke-dashoffset="-125" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="50" fill="none" stroke="#f0c040" stroke-width="20" stroke-dasharray="47.1 220" stroke-dashoffset="-188" transform="rotate(-90 60 60)"/><text x="60" y="64" text-anchor="middle" fill="#e8f0fe" font-size="12" font-weight="bold">47</text></svg><div class="donut-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--neon)"></div>Deluxe (30%)</div><div class="legend-item"><div class="legend-dot" style="background:var(--neon2)"></div>Suite (20%)</div><div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Standard (15%)</div><div class="legend-item"><div class="legend-dot" style="background:var(--text3)"></div>Other (35%)</div></div></div></div></div>
+        <div class="assistant-card"><h3>AI Admin Assistant</h3><p>Operational guidance generated from live booking behavior, occupancy, and demand signals.</p><div class="assistant-insights" id="assistantInsights"></div></div>
+        <div class="table-card"><div class="table-header"><h3>Recent Bookings</h3><button class="btn-add" onclick="showPanel('bookings',document.querySelector('[data-panel=bookings]'))" style="padding:8px 18px;font-size:.8rem;"><i class="fa fa-arrow-right"></i> View All</button></div><div style="overflow-x:auto;"><table class="data-table" id="recentBookingsTable"></table></div></div>
+      </div>
+      <div class="admin-panel" id="panel-bookings"><div class="page-header"><h2>Booking Management</h2><div class="panel-actions"><button class="toolbar-btn" onclick="exportBookingsCSV()"><i class="fa fa-file-csv"></i><span>Export Bookings</span></button><div class="search-bar"><i class="fa fa-search"></i><input type="text" id="bookingSearch" placeholder="Search bookings..."></div></div></div><div class="table-card"><div style="overflow-x:auto;"><table class="data-table" id="bookingsTable"></table></div></div></div>
+      <div class="admin-panel" id="panel-calendar"><div class="page-header"><h2>Booking Calendar</h2><div class="role-pill" id="calendarOccupancyLabel">Occupancy View</div></div><div class="calendar-shell"><div class="calendar-card"><div class="calendar-head"><div><h3 style="font-size:1.1rem;margin-bottom:6px;" id="calendarMonthLabel">April 2025</h3><p style="font-size:.82rem;color:var(--text2);">Booked dates glow in neon. Click a date to inspect occupancy and reservation details.</p></div><div class="calendar-nav"><button onclick="changeCalendarMonth(-1)"><i class="fa fa-chevron-left"></i></button><button onclick="changeCalendarMonth(1)"><i class="fa fa-chevron-right"></i></button></div></div><div class="calendar-weekdays"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div><div class="calendar-grid" id="calendarGrid"></div></div><div class="day-bookings-card"><h3 style="font-size:1.1rem;">Date Snapshot</h3><p style="font-size:.82rem;color:var(--text2);margin-top:6px;" id="calendarSelectedDateLabel">Select a date to view live booking activity.</p><div class="day-bookings-list" id="dayBookingsList"></div></div></div></div>
+      <div class="admin-panel" id="panel-rooms"><div class="page-header"><h2>Room Management</h2></div><div class="room-admin-grid" id="adminRoomsGrid"></div></div>
+      <div class="admin-panel" id="panel-customers"><div class="page-header"><h2>Customer Management</h2><div class="panel-actions"><button class="toolbar-btn" onclick="exportCustomersCSV()"><i class="fa fa-file-export"></i><span>Export Customers</span></button><div class="search-bar"><i class="fa fa-search"></i><input type="text" id="customerSearch" placeholder="Search customers..."></div></div></div><div class="table-card"><div style="overflow-x:auto;"><table class="data-table" id="customersTable"></table></div></div></div>
+      <div class="admin-panel" id="panel-insights"><div class="page-header"><h2>AI Smart Insights</h2></div><div class="insights-grid"><div class="insight-card"><h4>Most Booked Room</h4><div class="insight-value">Deluxe Sea View</div><div class="insight-sub">18 bookings this month</div></div><div class="insight-card"><h4>Peak Booking Day</h4><div class="insight-value">Friday</div><div class="insight-sub">42% more bookings vs avg</div></div><div class="insight-card"><h4>Avg Stay Duration</h4><div class="insight-value">3.2 nights</div><div class="insight-sub">↑ 0.4 nights vs last month</div></div><div class="insight-card"><h4>Occupancy Rate</h4><div class="insight-value">78%</div><div class="insight-sub">Target: 85% — 7% gap</div></div><div class="insight-card"><h4>Revenue per Room</h4><div class="insight-value">$2,066</div><div class="insight-sub">This month average</div></div><div class="insight-card"><h4>Guest Satisfaction</h4><div class="insight-value" id="avgReviewInsight">4.9 / 5</div><div class="insight-sub" id="avgReviewInsightSub">Based on 83 reviews</div></div></div><div class="smart-insight-banner"><h4>Smart Pricing Insight</h4><p id="smartPricingMessage">High demand detected on weekends — consider increasing price by 10%.</p></div><div class="table-card" style="margin-top:24px;"><div class="table-header"><h3>AI Assistant Watchlist</h3></div><div style="padding:24px;"><div class="insight-bullet-list" id="insightWatchlist"></div></div></div></div>
+    </div>
+  </div>
+  <div class="sidebar-toggle" onclick="toggleSidebar()"><i class="fa fa-bars"></i></div>
+</div>
+<script src="./assets/app.js"></script>
+</body>
+</html>
