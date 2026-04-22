@@ -1,0 +1,2422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutomateX AI Hotel System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg: #060b14;
+  --bg2: #0a1020;
+  --bg3: #0d1530;
+  --glass: rgba(255,255,255,0.04);
+  --glass2: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(100,200,255,0.2);
+  --neon: #00d4ff;
+  --neon2: #7b61ff;
+  --neon3: #ff6b6b;
+  --gold: #f0c040;
+  --text: #e8f0fe;
+  --text2: #8899bb;
+  --text3: #556077;
+  --card: rgba(10,18,40,0.9);
+  --radius: 16px;
+  --radius2: 24px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.5);
+  --glow: 0 0 30px rgba(0,212,255,0.15);
+  --glow2: 0 0 60px rgba(0,212,255,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:default;}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--neon2);border-radius:3px;}
+
+/* ─── NOISE OVERLAY ─── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.4;}
+
+/* ─── PAGE SYSTEM ─── */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,11,20,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;cursor:pointer;display:inline-flex;align-items:center;gap:12px;}
+.nav-logo span{color:var(--gold);-webkit-text-fill-color:var(--gold);}
+.brand-logo-img{width:42px;height:42px;object-fit:contain;border-radius:12px;padding:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(0,212,255,0.18);box-shadow:0 0 24px rgba(0,212,255,0.12);}
+.brand-logo-img.large{width:64px;height:64px;border-radius:18px;}
+.brand-logo-img.small{width:38px;height:38px;border-radius:10px;}
+.brand-logo-text{display:flex;flex-direction:column;line-height:1;}
+.brand-logo-sub{font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);margin-top:4px;-webkit-text-fill-color:var(--text3);}
+.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:.9rem;font-weight:500;transition:.3s;letter-spacing:.5px;cursor:pointer;}
+.nav-links a:hover{color:var(--neon);}
+.nav-cta{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff;border:none;padding:10px 24px;border-radius:50px;font-size:.85rem;font-weight:600;cursor:pointer;transition:.3s;letter-spacing:.5px;}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,0.4);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:.3s;}
+.mobile-menu{display:none;position:fixed;top:72px;left:0;right:0;background:rgba(6,11,20,0.98);backdrop-filter:blur(20px);padding:24px;border-bottom:1px solid var(--border);z-index:999;flex-direction:column;gap:16px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{color:var(--text2);text-decoration:none;font-size:1rem;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+
+/* ─── HERO ─── */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 80% 60% at 50% 20%,rgba(0,212,255,0.08) 0%,transparent 60%),
+  radial-gradient(ellipse 60% 40% at 80% 80%,rgba(123,97,255,0.1) 0%,transparent 60%),
+  linear-gradient(135deg,#060b14 0%,#0a1020 50%,#060c18 100%);
+}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black,transparent);}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);animation:orbFloat 8s ease-in-out infinite;}
+.orb1{width:400px;height:400px;background:rgba(0,212,255,0.06);top:-100px;right:-100px;animation-delay:0s;}
+.orb2{width:300px;height:300px;background:rgba(123,97,255,0.08);bottom:-50px;left:-50px;animation-delay:-3s;}
+.orb3{width:200px;height:200px;background:rgba(240,192,64,0.05);top:40%;left:60%;animation-delay:-5s;}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.05);}}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:800px;padding:0 24px;animation:heroIn 1.2s ease forwards;}
+@keyframes heroIn{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);border-radius:50px;padding:8px 20px;font-size:.8rem;color:var(--neon);font-weight:600;letter-spacing:1px;margin-bottom:28px;}
+.hero-badge::before{content:'';width:6px;height:6px;background:var(--neon);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:900;line-height:1.1;margin-bottom:24px;letter-spacing:-1px;}
+.hero h1 .line1{display:block;color:var(--text);}
+.hero h1 .line2{display:block;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:1.1rem;color:var(--text2);max-width:520px;margin:0 auto 40px;line-height:1.7;}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff;border:none;padding:16px 36px;border-radius:50px;font-size:1rem;font-weight:600;cursor:pointer;transition:.3s;letter-spacing:.5px;}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,212,255,0.4);}
+.btn-primary:active{transform:translateY(-1px) scale(.985);}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border2);padding:16px 36px;border-radius:50px;font-size:1rem;font-weight:600;cursor:pointer;transition:.3s;}
+.btn-outline:hover{border-color:var(--neon);color:var(--neon);transform:translateY(-3px);}
+.btn-outline:active{transform:translateY(-1px) scale(.985);}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:.75rem;letter-spacing:2px;animation:scrollBob 2s ease-in-out infinite;}
+@keyframes scrollBob{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+
+/* ─── FLOATING STATS ─── */
+.hero-stats{position:absolute;bottom:120px;left:50%;transform:translateX(-50%);display:flex;gap:20px;z-index:2;flex-wrap:wrap;justify-content:center;}
+.stat-chip{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:50px;padding:12px 24px;display:flex;align-items:center;gap:12px;animation:chipIn 1s ease backwards;}
+.stat-chip:nth-child(1){animation-delay:.3s;}
+.stat-chip:nth-child(2){animation-delay:.5s;}
+.stat-chip:nth-child(3){animation-delay:.7s;}
+@keyframes chipIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.stat-num{font-family:'Space Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--neon);}
+.stat-label{font-size:.8rem;color:var(--text2);}
+
+/* ─── SECTION STYLES ─── */
+section{padding:100px 0;}
+.container{max-width:1200px;margin:0 auto;padding:0 40px;}
+.section-header{text-align:center;margin-bottom:60px;}
+.section-tag{display:inline-block;font-size:.75rem;font-weight:600;color:var(--neon);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;font-family:'Space Mono',monospace;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.2;margin-bottom:16px;}
+.section-sub{color:var(--text2);font-size:1.05rem;max-width:500px;margin:0 auto;line-height:1.7;}
+.gradient-text{background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* ─── ROOMS ─── */
+.rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:28px;}
+.room-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;transition:.4s cubic-bezier(.23,1,.32,1);cursor:pointer;position:relative;}
+.room-card:hover{transform:translateY(-8px);border-color:var(--neon);box-shadow:0 20px 60px rgba(0,212,255,0.15),0 0 0 1px rgba(0,212,255,0.1);}
+.room-card:hover .room-img{transform:scale(1.06);}
+.room-card:active{transform:translateY(-4px) scale(.995);}
+.room-card.expanded{border-color:rgba(0,212,255,0.35);box-shadow:0 20px 60px rgba(0,212,255,0.12),0 0 0 1px rgba(0,212,255,0.08);}
+.room-card:focus-visible{outline:2px solid rgba(0,212,255,0.45);outline-offset:2px;}
+.room-img-wrap{height:220px;overflow:hidden;position:relative;}
+.room-img{width:100%;height:100%;object-fit:cover;transition:.6s cubic-bezier(.23,1,.32,1);}
+.room-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;transition:.6s;}
+.room-photo{width:100%;height:100%;object-fit:cover;display:block;transition:.6s cubic-bezier(.23,1,.32,1);transform:scale(1);}
+.room-photo-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,rgba(0,20,40,.8),rgba(10,16,48,.9));}
+.room-badge{position:absolute;top:16px;left:16px;background:rgba(0,212,255,0.9);color:#000;font-size:.7rem;font-weight:700;padding:6px 14px;border-radius:50px;letter-spacing:1px;backdrop-filter:blur(10px);}
+.room-badge.sold{background:rgba(255,107,107,0.9);}
+.room-body{padding:24px;}
+.room-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:8px;}
+.room-desc{font-size:.85rem;color:var(--text2);margin-bottom:16px;line-height:1.6;}
+.room-features{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.feature-tag{background:var(--glass2);border:1px solid var(--border);border-radius:50px;padding:5px 12px;font-size:.75rem;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.rating-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-2px 0 14px;}
+.rating-pill{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);font-size:.75rem;color:var(--text2);}
+.rating-stars{color:var(--gold);letter-spacing:1px;}
+.reviews-wrap{display:none;margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.06);}
+.room-card.expanded .reviews-wrap{display:block;animation:stepIn .24s ease;}
+.reviews-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+.reviews-head h4{font-size:.82rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3);font-family:'Space Mono',monospace;}
+.review-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.review-item{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);}
+.review-item strong{display:block;font-size:.8rem;margin-bottom:4px;color:var(--text);}
+.review-item p{font-size:.8rem;color:var(--text2);line-height:1.55;}
+.review-form{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:start;}
+.review-form select,.review-form input{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:11px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none;}
+.review-form button{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff;border:none;padding:11px 14px;border-radius:12px;font-size:.78rem;font-weight:700;cursor:pointer;}
+.review-empty{font-size:.8rem;color:var(--text3);}
+.panel-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.toolbar-btn{background:var(--glass2);border:1px solid var(--border);color:var(--text2);padding:10px 16px;border-radius:999px;font-size:.8rem;font-weight:600;cursor:pointer;transition:.3s;display:inline-flex;align-items:center;gap:8px;}
+.toolbar-btn:hover{border-color:var(--neon);color:var(--neon);transform:translateY(-1px);}
+.toolbar-btn.active{background:rgba(0,212,255,0.12);border-color:rgba(0,212,255,0.22);color:var(--neon);}
+.toolbar-select{background:var(--glass2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:999px;font-size:.8rem;outline:none;}
+.notification-stack{position:fixed;right:24px;bottom:24px;z-index:3200;display:flex;flex-direction:column;gap:12px;max-width:340px;}
+.live-notification{background:rgba(10,18,40,0.96);border:1px solid rgba(0,212,255,0.18);border-radius:18px;padding:16px 18px;box-shadow:0 24px 60px rgba(0,0,0,0.35);animation:notificationIn .35s ease;}
+.live-notification h4{font-size:.9rem;margin-bottom:6px;}
+.live-notification p{font-size:.8rem;color:var(--text2);line-height:1.55;}
+@keyframes notificationIn{from{opacity:0;transform:translateY(18px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+.insight-bullet-list{display:flex;flex-direction:column;gap:12px;}
+.assistant-card{background:linear-gradient(180deg,rgba(0,212,255,0.08),rgba(123,97,255,0.05));border:1px solid rgba(0,212,255,0.18);border-radius:var(--radius2);padding:24px;margin-top:24px;}
+.assistant-card h3{font-size:1rem;margin-bottom:8px;}
+.assistant-card p{font-size:.85rem;color:var(--text2);line-height:1.6;margin-bottom:18px;}
+.assistant-insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+.assistant-insight{padding:16px;border-radius:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);}
+.assistant-insight strong{display:block;font-size:.82rem;color:var(--neon);margin-bottom:8px;}
+.assistant-insight span{font-size:.82rem;color:var(--text2);line-height:1.55;}
+.smart-insight-banner{margin-top:20px;padding:18px 20px;border-radius:18px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.16);}
+.smart-insight-banner h4{font-size:.82rem;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;font-family:'Space Mono',monospace;}
+.smart-insight-banner p{font-size:.9rem;color:var(--text);line-height:1.6;}
+.skeleton-card,.skeleton-line,.skeleton-pill{position:relative;overflow:hidden;background:rgba(255,255,255,0.04);}
+.skeleton-card::after,.skeleton-line::after,.skeleton-pill::after{content:'';position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);animation:skeletonSweep 1.2s infinite;}
+@keyframes skeletonSweep{100%{transform:translateX(100%);}}
+.skeleton-room{border-radius:24px;padding:24px;border:1px solid var(--border);min-height:340px;}
+.skeleton-thumb{height:200px;border-radius:18px;margin-bottom:18px;}
+.skeleton-line{height:14px;border-radius:10px;margin-bottom:12px;}
+.skeleton-line.short{width:45%;}
+.skeleton-line.medium{width:70%;}
+.skeleton-pill{height:34px;border-radius:999px;width:120px;}
+.ripple{position:absolute;border-radius:50%;transform:scale(0);animation:rippleEffect .6s linear;background:rgba(255,255,255,0.35);pointer-events:none;}
+@keyframes rippleEffect{to{transform:scale(4);opacity:0;}}
+.room-footer{display:flex;align-items:center;justify-content:space-between;}
+.room-price{font-family:'Space Mono',monospace;}
+.price-amount{font-size:1.5rem;font-weight:700;color:var(--neon);}
+.price-per{font-size:.75rem;color:var(--text3);}
+.btn-book{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff;border:none;padding:10px 22px;border-radius:50px;font-size:.85rem;font-weight:600;cursor:pointer;transition:.3s;min-height:44px;}
+.btn-book:hover{box-shadow:0 6px 20px rgba(0,212,255,0.4);transform:scale(1.05);}
+.btn-book:disabled{background:var(--text3);cursor:not-allowed;}
+
+/* ─── AI RECOMMENDATION ─── */
+.ai-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.ai-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius2);padding:48px;max-width:800px;margin:0 auto;position:relative;overflow:hidden;}
+.ai-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 0%,rgba(0,212,255,0.06),transparent);pointer-events:none;}
+.ai-form{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px;}
+.form-group{display:flex;flex-direction:column;gap:8px;}
+.form-group label{font-size:.8rem;font-weight:600;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;}
+.form-group input,.form-group select{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:14px 18px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:.3s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--neon);box-shadow:0 0 0 3px rgba(0,212,255,0.1);}
+.form-group select option{background:var(--bg3);}
+.ai-result{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.2);border-radius:var(--radius);padding:24px;display:none;animation:resultIn .4s ease;}
+.ai-result.show{display:flex;align-items:flex-start;gap:16px;}
+@keyframes resultIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.ai-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--neon),var(--neon2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.ai-result-text h4{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:6px;}
+.ai-result-text p{color:var(--text2);font-size:.9rem;line-height:1.6;}
+.ai-thinking{text-align:center;padding:24px;color:var(--neon);font-size:.85rem;display:none;}
+.ai-thinking.show{display:block;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* ─── FEATURES ─── */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px;}
+.feature-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius2);padding:32px 28px;transition:.4s;position:relative;overflow:hidden;}
+.feature-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(0,212,255,0.05),transparent 60%);opacity:0;transition:.4s;}
+.feature-card:hover{border-color:rgba(0,212,255,0.3);transform:translateY(-4px);}
+.feature-card:hover::before{opacity:1;}
+.feat-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:20px;}
+.feat-icon.blue{background:rgba(0,212,255,0.1);color:var(--neon);}
+.feat-icon.purple{background:rgba(123,97,255,0.1);color:var(--neon2);}
+.feat-icon.gold{background:rgba(240,192,64,0.1);color:var(--gold);}
+.feat-icon.red{background:rgba(255,107,107,0.1);color:var(--neon3);}
+.feature-card h3{font-size:1rem;font-weight:600;margin-bottom:8px;}
+.feature-card p{font-size:.85rem;color:var(--text2);line-height:1.6;}
+
+/* ─── BOOKING MODAL ─── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.modal{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;animation:slideUp .4s cubic-bezier(.23,1,.32,1);}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.modal-header{padding:32px 32px 0;display:flex;align-items:center;justify-content:space-between;}
+.modal-header h2{font-family:'Playfair Display',serif;font-size:1.5rem;}
+.modal-close{width:36px;height:36px;background:var(--glass2);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:.3s;font-size:1rem;}
+.modal-close:hover{color:var(--neon3);border-color:var(--neon3);}
+.modal-body{padding:32px;}
+.modal-steps{display:flex;gap:8px;margin-bottom:32px;}
+.step-dot{flex:1;height:4px;background:var(--border);border-radius:2px;transition:.4s;}
+.step-dot.active{background:var(--neon);}
+.step-dot.done{background:var(--neon2);}
+.booking-step{display:none;}
+.booking-step.active{display:block;animation:stepIn .3s ease;}
+@keyframes stepIn{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:translateX(0);}}
+.booking-room-summary{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px;display:flex;align-items:center;gap:16px;}
+.booking-room-img{width:70px;height:70px;border-radius:12px;object-fit:cover;font-size:2rem;display:flex;align-items:center;justify-content:center;background:var(--bg);}
+.booking-room-photo{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block;}
+.booking-room-info h4{font-weight:600;margin-bottom:4px;}
+.booking-room-info p{font-size:.85rem;color:var(--neon);font-family:'Space Mono',monospace;}
+.modal-form{display:flex;flex-direction:column;gap:16px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.modal-form .form-group input,.modal-form .form-group select{width:100%;}
+.modal-footer{padding:0 32px 32px;display:flex;gap:12px;justify-content:flex-end;}
+.btn-back{background:var(--glass2);border:1px solid var(--border);color:var(--text2);padding:12px 24px;border-radius:50px;cursor:pointer;font-size:.9rem;transition:.3s;}
+.btn-back:hover{color:var(--text);border-color:var(--text2);}
+.btn-next{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff;border:none;padding:12px 28px;border-radius:50px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.3s;}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,0.4);}
+.confirm-summary{background:var(--glass);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
+.confirm-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:.9rem;}
+.confirm-row:last-child{border-bottom:none;font-weight:600;color:var(--neon);}
+.payment-icons{display:flex;gap:12px;margin-top:16px;}
+.pay-icon{background:var(--glass2);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:.8rem;color:var(--text2);}
+.success-screen{text-align:center;padding:20px 0;}
+.success-icon{width:80px;height:80px;background:linear-gradient(135deg,#00ff88,#00d4ff);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 24px;animation:successPop .5s cubic-bezier(.23,1,.32,1);}
+@keyframes successPop{from{transform:scale(0);}to{transform:scale(1);}}
+.success-screen h3{font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:12px;}
+.success-screen p{color:var(--text2);line-height:1.6;margin-bottom:8px;}
+.booking-id{font-family:'Space Mono',monospace;background:var(--glass);border:1px solid var(--border);border-radius:8px;padding:12px 20px;font-size:.9rem;color:var(--neon);display:inline-block;margin-top:16px;}
+.success-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:24px 0 28px;}
+.invoice-card{background:#fff;color:#102038;border-radius:24px;padding:28px;border:1px solid rgba(255,255,255,0.1);box-shadow:0 24px 60px rgba(0,0,0,0.25);text-align:left;max-width:460px;margin:0 auto;}
+.invoice-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(16,32,56,0.1);}
+.invoice-brand h4{font-family:'Playfair Display',serif;font-size:1.35rem;color:#08131f;margin-bottom:4px;}
+.invoice-brand p,.invoice-meta,.invoice-row{font-size:.85rem;color:#4a5c74;}
+.invoice-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,0.12);color:#0582a4;border-radius:50px;padding:8px 14px;font-size:.72rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;}
+.invoice-body{display:flex;flex-direction:column;gap:12px;}
+.invoice-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:10px 0;border-bottom:1px dashed rgba(16,32,56,0.1);}
+.invoice-row:last-child{border-bottom:none;}
+.invoice-row strong{color:#08131f;}
+.invoice-total{margin-top:6px;padding:14px 16px;border-radius:16px;background:#f4fbff;border:1px solid rgba(0,212,255,0.16);}
+.invoice-total .invoice-row{padding:0;border-bottom:none;}
+.payment-ready-label{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.16);border-radius:999px;padding:10px 16px;font-size:.78rem;color:var(--neon);margin-top:18px;}
+.role-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);font-size:.74rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--neon);}
+.sidebar-item.hidden-by-role,.admin-panel.hidden-by-role,.admin-only.hidden-by-role{display:none !important;}
+.calendar-shell{display:grid;grid-template-columns:1.8fr 1fr;gap:24px;}
+.calendar-card,.day-bookings-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:24px;}
+.calendar-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px;}
+.calendar-nav{display:flex;gap:8px;}
+.calendar-nav button{background:var(--glass2);border:1px solid var(--border);color:var(--text2);width:38px;height:38px;border-radius:12px;cursor:pointer;transition:.3s;}
+.calendar-nav button:hover{border-color:var(--neon);color:var(--neon);}
+.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;}
+.calendar-weekdays{margin-bottom:10px;}
+.calendar-weekdays div{font-size:.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;text-align:center;font-family:'Space Mono',monospace;}
+.calendar-day{min-height:92px;border-radius:18px;border:1px solid var(--border);background:rgba(255,255,255,0.02);padding:12px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:.3s;}
+.calendar-day:hover{transform:translateY(-3px);border-color:rgba(0,212,255,0.2);}
+.calendar-day.muted{opacity:.3;cursor:default;}
+.calendar-day.active{border-color:rgba(0,212,255,0.4);box-shadow:0 0 0 1px rgba(0,212,255,0.16),0 12px 30px rgba(0,212,255,0.08);}
+.calendar-day.has-bookings{background:linear-gradient(180deg,rgba(0,212,255,0.12),rgba(123,97,255,0.08));}
+.calendar-day-number{font-family:'Space Mono',monospace;font-size:.82rem;color:var(--text);}
+.calendar-day-count{margin-top:auto;font-size:.72rem;color:var(--neon);}
+.occupancy-strip{display:flex;gap:4px;flex-wrap:wrap;}
+.occupancy-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.1);}
+.occupancy-dot.filled{background:var(--neon);box-shadow:0 0 12px rgba(0,212,255,0.45);}
+.day-bookings-list{display:flex;flex-direction:column;gap:12px;margin-top:18px;}
+.day-booking-item{padding:14px 16px;border-radius:16px;background:var(--glass);border:1px solid var(--border);}
+.day-booking-item h4{font-size:.92rem;margin-bottom:6px;}
+.day-booking-item p{font-size:.8rem;color:var(--text2);line-height:1.5;}
+.login-hint{font-size:.75rem;color:var(--text3);margin-top:10px;text-align:center;}
+
+/* ─── ADMIN ─── */
+#adminPage{display:none;background:var(--bg);}
+#adminPage.active{display:flex;}
+.admin-wrapper{display:flex;width:100%;min-height:100vh;}
+.sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 0;position:fixed;height:100vh;overflow-y:auto;z-index:100;transition:.3s;}
+.sidebar-logo{padding:0 24px 24px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.sidebar-logo .nav-logo{font-size:1.2rem;}
+.sidebar-logo p{font-size:.75rem;color:var(--text3);margin-top:4px;}
+.sidebar-nav{flex:1;padding:0 12px;}
+.sidebar-section{font-size:.7rem;font-weight:600;color:var(--text3);letter-spacing:2px;text-transform:uppercase;padding:16px 12px 8px;font-family:'Space Mono',monospace;}
+.sidebar-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;cursor:pointer;color:var(--text2);font-size:.9rem;font-weight:500;transition:.3s;margin-bottom:2px;}
+.sidebar-item:hover{background:var(--glass2);color:var(--text);}
+.sidebar-item.active{background:rgba(0,212,255,0.1);color:var(--neon);border-left:3px solid var(--neon);}
+.sidebar-item i{width:20px;text-align:center;font-size:.95rem;}
+.admin-main{flex:1;margin-left:260px;display:flex;flex-direction:column;min-height:100vh;}
+.admin-topbar{height:72px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:50;}
+.topbar-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;}
+.topbar-right{display:flex;align-items:center;gap:16px;}
+.admin-menu-btn{display:none;background:var(--glass2);border:1px solid var(--border);color:var(--text2);width:40px;height:40px;border-radius:12px;align-items:center;justify-content:center;cursor:pointer;transition:.3s;}
+.admin-menu-btn:hover{border-color:var(--neon);color:var(--neon);}
+.topbar-btn{background:var(--glass2);border:1px solid var(--border);color:var(--text2);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s;position:relative;}
+.topbar-btn:hover{border-color:var(--neon);color:var(--neon);}
+.notif-badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--neon3);border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff;}
+.admin-avatar{width:40px;height:40px;background:linear-gradient(135deg,var(--neon),var(--neon2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;cursor:pointer;}
+.admin-content{padding:32px;flex:1;}
+.admin-panel{display:none;}
+.admin-panel.active{display:block;animation:panelIn .3s ease;}
+@keyframes panelIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;}
+.page-header h2{font-family:'Playfair Display',serif;font-size:1.6rem;}
+.btn-add{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff;border:none;padding:10px 22px;border-radius:50px;font-size:.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.3s;}
+.btn-add:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,212,255,0.3);}
+
+/* ─── STATS CARDS ─── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;margin-bottom:32px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;transition:.3s;position:relative;overflow:hidden;}
+.stat-card::after{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;border-radius:50%;opacity:.4;}
+.stat-card.blue::after{background:radial-gradient(var(--neon),transparent);}
+.stat-card.purple::after{background:radial-gradient(var(--neon2),transparent);}
+.stat-card.gold::after{background:radial-gradient(var(--gold),transparent);}
+.stat-card.red::after{background:radial-gradient(var(--neon3),transparent);}
+.stat-card:hover{transform:translateY(-4px);border-color:rgba(0,212,255,0.2);}
+.stat-card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:16px;}
+.stat-card.blue .stat-card-icon{background:rgba(0,212,255,0.1);color:var(--neon);}
+.stat-card.purple .stat-card-icon{background:rgba(123,97,255,0.1);color:var(--neon2);}
+.stat-card.gold .stat-card-icon{background:rgba(240,192,64,0.1);color:var(--gold);}
+.stat-card.red .stat-card-icon{background:rgba(255,107,107,0.1);color:var(--neon3);}
+.stat-card-num{font-family:'Space Mono',monospace;font-size:2rem;font-weight:700;margin-bottom:4px;}
+.stat-card-label{font-size:.85rem;color:var(--text2);}
+.stat-card-change{font-size:.75rem;color:#00ff88;margin-top:8px;display:flex;align-items:center;gap:4px;}
+.stat-card-change.down{color:var(--neon3);}
+
+/* ─── CHARTS ─── */
+.charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-bottom:32px;}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:28px;}
+.chart-title{font-size:1rem;font-weight:600;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.chart-sub{font-size:.8rem;color:var(--text3);margin-bottom:24px;}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:150px;}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bar{width:100%;border-radius:6px 6px 0 0;transition:1s cubic-bezier(.23,1,.32,1);position:relative;cursor:pointer;}
+.bar.neon{background:linear-gradient(0deg,var(--neon2),var(--neon));}
+.bar.gold{background:linear-gradient(0deg,#c9860a,var(--gold));}
+.bar-label{font-size:.65rem;color:var(--text3);font-family:'Space Mono',monospace;}
+.bar:hover::after{content:attr(data-val);position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:var(--neon);color:#000;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:6px;white-space:nowrap;}
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:20px;}
+.donut-svg{width:140px;height:140px;}
+.donut-legend{width:100%;display:flex;flex-direction:column;gap:8px;}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--text2);}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ─── TABLES ─── */
+.table-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;}
+.table-header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
+.table-header h3{font-size:1rem;font-weight:600;}
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--glass2);border:1px solid var(--border);border-radius:50px;padding:8px 16px;}
+.search-bar input{background:transparent;border:none;outline:none;color:var(--text);font-size:.85rem;width:180px;}
+.search-bar i{color:var(--text3);font-size:.85rem;}
+.data-table{width:100%;min-width:760px;border-collapse:collapse;}
+.data-table th{padding:14px 20px;text-align:left;font-size:.75rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border);}
+.data-table td{padding:16px 20px;font-size:.875rem;border-bottom:1px solid rgba(255,255,255,0.03);}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:var(--glass);}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:50px;font-size:.75rem;font-weight:600;}
+.status-badge::before{content:'';width:5px;height:5px;border-radius:50%;}
+.badge-confirmed{background:rgba(0,255,136,0.1);color:#00ff88;}
+.badge-confirmed::before{background:#00ff88;}
+.badge-pending{background:rgba(240,192,64,0.1);color:var(--gold);}
+.badge-pending::before{background:var(--gold);}
+.badge-cancelled{background:rgba(255,107,107,0.1);color:var(--neon3);}
+.badge-cancelled::before{background:var(--neon3);}
+.badge-available{background:rgba(0,255,136,0.1);color:#00ff88;}
+.badge-available::before{background:#00ff88;}
+.badge-occupied{background:rgba(255,107,107,0.1);color:var(--neon3);}
+.badge-occupied::before{background:var(--neon3);}
+.action-btn{background:var(--glass2);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s;font-size:.8rem;}
+.action-btn:hover{border-color:var(--neon);color:var(--neon);}
+.action-btn.danger:hover{border-color:var(--neon3);color:var(--neon3);}
+.action-btn.success:hover{border-color:#00ff88;color:#00ff88;}
+
+/* ─── INSIGHTS ─── */
+.insights-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:24px;}
+.insight-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);padding:24px;}
+.insight-card h4{font-size:.85rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;font-family:'Space Mono',monospace;}
+.insight-value{font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--neon);margin-bottom:6px;}
+.insight-sub{font-size:.8rem;color:var(--text2);}
+.alert-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);}
+.alert-item:last-child{border-bottom:none;}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.alert-text{font-size:.85rem;color:var(--text2);}
+.alert-time{font-size:.75rem;color:var(--text3);font-family:'Space Mono',monospace;margin-left:auto;}
+
+/* ─── CHATBOT ─── */
+.chat-fab{position:fixed;bottom:32px;right:32px;width:60px;height:60px;background:linear-gradient(135deg,var(--neon),var(--neon2));border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 32px rgba(0,212,255,0.4);z-index:500;transition:.3s;font-size:1.3rem;color:#fff;}
+.chat-fab:hover{transform:scale(1.1);}
+.chat-fab.open{background:linear-gradient(135deg,var(--neon3),#ff4444);}
+.chat-window{position:fixed;bottom:108px;right:32px;width:360px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);box-shadow:var(--shadow);z-index:499;display:none;flex-direction:column;max-height:500px;overflow:hidden;}
+.chat-window.open{display:flex;animation:chatSlide .3s cubic-bezier(.23,1,.32,1);}
+@keyframes chatSlide{from{opacity:0;transform:translateY(20px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.chat-head{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+.chat-avatar{width:40px;height:40px;background:linear-gradient(135deg,var(--neon),var(--neon2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.chat-head-info h4{font-size:.95rem;font-weight:600;}
+.chat-head-info p{font-size:.75rem;color:#00ff88;display:flex;align-items:center;gap:4px;}
+.chat-head-info p::before{content:'';width:5px;height:5px;background:#00ff88;border-radius:50%;}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:200px;}
+.msg{max-width:80%;padding:10px 14px;border-radius:12px;font-size:.85rem;line-height:1.5;animation:msgIn .2s ease;}
+@keyframes msgIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.msg.bot{background:var(--glass2);border:1px solid var(--border);align-self:flex-start;border-radius:4px 12px 12px 12px;}
+.msg.user{background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(123,97,255,0.2));border:1px solid rgba(0,212,255,0.2);align-self:flex-end;border-radius:12px 4px 12px 12px;}
+.chat-quick{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 12px;}
+.quick-btn{background:var(--glass);border:1px solid var(--border2);color:var(--neon);font-size:.75rem;padding:6px 12px;border-radius:50px;cursor:pointer;transition:.3s;white-space:nowrap;}
+.quick-btn:hover{background:rgba(0,212,255,0.1);}
+.chat-input-row{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;}
+.chat-input{flex:1;background:var(--glass2);border:1px solid var(--border);border-radius:50px;padding:10px 16px;color:var(--text);font-size:.85rem;outline:none;font-family:'DM Sans',sans-serif;}
+.chat-input:focus{border-color:var(--neon);}
+.chat-send{background:linear-gradient(135deg,var(--neon),var(--neon2));border:none;color:#fff;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s;font-size:.85rem;}
+.chat-send:hover{transform:scale(1.1);}
+
+/* ─── FOOTER ─── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 0 32px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+.footer-brand h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px;}
+.footer-brand p{font-size:.85rem;color:var(--text2);line-height:1.7;max-width:280px;margin-bottom:20px;}
+.footer-brand-head{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.social-links{display:flex;gap:10px;}
+.social-link{width:38px;height:38px;background:var(--glass2);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--text2);cursor:pointer;transition:.3s;font-size:.9rem;text-decoration:none;}
+.social-link:hover{border-color:var(--neon);color:var(--neon);}
+.footer-col h4{font-size:.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:16px;font-family:'Space Mono',monospace;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:10px;}
+.footer-col ul li a{color:var(--text2);text-decoration:none;font-size:.85rem;transition:.3s;cursor:pointer;}
+.footer-col ul li a:hover{color:var(--neon);}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.footer-bottom p{font-size:.8rem;color:var(--text3);}
+
+/* ─── LOGIN PAGE ─── */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden;}
+.login-page::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 30% 50%,rgba(0,212,255,0.04),transparent),radial-gradient(ellipse 50% 60% at 70% 30%,rgba(123,97,255,0.06),transparent);}
+.login-card{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius2);padding:48px;width:100%;max-width:420px;position:relative;animation:slideUp .5s ease;}
+.login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--neon),var(--neon2));border-radius:var(--radius2) var(--radius2) 0 0;}
+.login-logo{text-align:center;margin-bottom:32px;}
+.login-logo h2{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.login-logo p{font-size:.85rem;color:var(--text2);margin-top:6px;}
+.login-logo-mark{display:flex;justify-content:center;margin-bottom:16px;}
+.login-tabs{display:flex;background:var(--glass);border-radius:12px;padding:4px;margin-bottom:28px;border:1px solid var(--border);}
+.login-tab{flex:1;padding:10px;text-align:center;border-radius:9px;font-size:.85rem;font-weight:600;cursor:pointer;transition:.3s;color:var(--text2);}
+.login-tab.active{background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(123,97,255,0.2));color:var(--neon);border:1px solid rgba(0,212,255,0.2);}
+.login-form{display:flex;flex-direction:column;gap:16px;}
+.login-form .form-group{display:flex;flex-direction:column;gap:6px;}
+.login-form .form-group input{background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:14px 18px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:.3s;}
+.login-form .form-group input:focus{border-color:var(--neon);}
+.login-btn{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff;border:none;padding:16px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;transition:.3s;margin-top:8px;}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,0.4);}
+.demo-creds{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:12px;padding:16px;margin-top:16px;font-size:.8rem;color:var(--text2);}
+.demo-creds strong{color:var(--neon);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .charts-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .calendar-shell{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+  .admin-main{margin-left:0;}
+  .sidebar{transform:translateX(-100%);transition:.3s;}
+  .sidebar.open{transform:translateX(0);}
+  .rooms-grid{grid-template-columns:1fr;}
+  .ai-form{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .container{padding:0 20px;}
+  .admin-content{padding:20px;}
+  .chat-window{width:calc(100vw - 40px);right:20px;}
+  .hero-stats{display:none;}
+  .form-row{grid-template-columns:1fr;}
+  .admin-topbar{padding:0 16px;}
+  .admin-menu-btn{display:inline-flex;}
+  .topbar-right{gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+  .role-pill{font-size:.68rem;padding:7px 11px;}
+  .toolbar-select{min-height:42px;}
+  nav{padding:0 20px;}
+  .nav-logo{font-size:1.08rem;gap:10px;}
+  .brand-logo-img{width:36px;height:36px;}
+  .brand-logo-sub{display:none;}
+  .success-actions{flex-direction:column;}
+  .invoice-card{padding:22px;}
+  .calendar-weekdays,.calendar-grid{gap:6px;}
+  .calendar-day{min-height:78px;padding:10px;}
+  .review-form{grid-template-columns:1fr;}
+  .btn-primary,.btn-outline,.nav-cta,.toolbar-btn,.login-btn,.btn-next,.btn-back{min-height:44px;}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr;}
+  .features-grid{grid-template-columns:1fr;}
+  .login-card{padding:32px 24px;}
+  section{padding:60px 0;}
+}
+
+/* ─── TOAST ─── */
+.toast-container{position:fixed;top:90px;right:24px;z-index:3000;display:flex;flex-direction:column;gap:10px;}
+.toast{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px 20px;font-size:.85rem;display:flex;align-items:center;gap:12px;animation:toastIn .3s ease;box-shadow:var(--shadow);min-width:260px;}
+.toast.success{border-color:rgba(0,255,136,0.3);}
+.toast.error{border-color:rgba(255,107,107,0.3);}
+.toast-icon{font-size:1rem;}
+.toast.success .toast-icon{color:#00ff88;}
+.toast.error .toast-icon{color:var(--neon3);}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
+
+/* ─── ROOM MANAGE ─── */
+.room-admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;}
+.room-admin-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;}
+.room-admin-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:var(--bg);}
+.room-admin-photo{width:100%;height:100%;object-fit:cover;display:block;}
+.room-admin-body{padding:20px;}
+.room-admin-body h4{font-size:1rem;font-weight:600;margin-bottom:4px;}
+.room-admin-body p{font-size:.8rem;color:var(--text2);margin-bottom:12px;}
+.room-admin-footer{display:flex;align-items:center;justify-content:space-between;}
+.room-admin-price{font-family:'Space Mono',monospace;font-size:1.1rem;color:var(--neon);}
+.room-actions{display:flex;gap:6px;}
+
+/* ─── MOBILE SIDEBAR TOGGLE ─── */
+.sidebar-toggle{display:none;position:fixed;bottom:32px;left:32px;width:44px;height:44px;background:var(--neon2);border-radius:50%;z-index:200;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:#fff;}
+@media(max-width:768px){.sidebar-toggle{display:flex;}}
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+<div class="notification-stack" id="notificationStack"></div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: WEBSITE (CLIENT SIDE)
+═══════════════════════════════════════════ -->
+<div class="page active" id="websitePage">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo" onclick="scrollToTop()">
+      <img src="./Images/logo.png" alt="AutomateX logo" class="brand-logo-img small">
+      <span class="brand-logo-text">
+        <span>AutomateX<span>.</span></span>
+        <span class="brand-logo-sub">AI Hotel System</span>
+      </span>
+    </div>
+    <div class="nav-links">
+      <a onclick="scrollTo('rooms')" data-i18n="navRooms">Rooms</a>
+      <a onclick="scrollTo('ai-rec')" data-i18n="navAiPicks">AI Picks</a>
+      <a onclick="scrollTo('features')" data-i18n="navFeatures">Features</a>
+      <a onclick="switchPage('loginPage')" data-i18n="navAdmin">Admin</a>
+    </div>
+    <button class="nav-cta" onclick="scrollTo('rooms')" data-i18n="bookNow">Book Now</button>
+    <div class="hamburger" onclick="toggleMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a onclick="scrollTo('rooms');toggleMobile()" data-i18n="navRooms">Rooms</a>
+    <a onclick="scrollTo('ai-rec');toggleMobile()" data-i18n="navAiPicks">AI Picks</a>
+    <a onclick="scrollTo('features');toggleMobile()" data-i18n="navFeatures">Features</a>
+    <a onclick="switchPage('loginPage');toggleMobile()" data-i18n="adminLogin">Admin Login</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="hero-content">
+      <div class="hero-badge" data-i18n="heroBadge">✦ AI-Powered Luxury Hotel System</div>
+      <h1>
+        <span class="line1">Experience Smart</span>
+        <span class="line2">Luxury with AI</span>
+      </h1>
+      <p data-i18n="heroText">AutomateX redefines hotel hospitality — intelligent booking, personalized recommendations, and seamless experiences crafted by AI.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="scrollTo('rooms')"><i class="fa fa-calendar-check" style="margin-right:8px"></i><span data-i18n="bookNow">Book Now</span></button>
+        <button class="btn-outline" onclick="scrollTo('rooms')" data-i18n="exploreRooms">Explore Rooms</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-chip"><span class="stat-num">500+</span><span class="stat-label">Happy Guests</span></div>
+      <div class="stat-chip"><span class="stat-num">24/7</span><span class="stat-label">AI Support</span></div>
+      <div class="stat-chip"><span class="stat-num">4.9★</span><span class="stat-label">Rating</span></div>
+    </div>
+    <div class="hero-scroll"><i class="fa fa-chevron-down"></i><span>SCROLL</span></div>
+  </section>
+
+  <!-- ROOMS -->
+  <section id="rooms" style="background:var(--bg);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="ourCollection">Our Collection</div>
+        <h2 class="section-title">Curated <span class="gradient-text">Luxury Rooms</span></h2>
+        <p class="section-sub" data-i18n="roomsSub">Each room crafted for perfection — where elegance meets smart technology</p>
+      </div>
+      <div class="rooms-grid" id="roomsGrid"></div>
+    </div>
+  </section>
+
+  <!-- AI RECOMMENDATION -->
+  <section class="ai-section" id="ai-rec">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="smartAi">Smart AI</div>
+        <h2 class="section-title">Find Your <span class="gradient-text">Perfect Room</span></h2>
+        <p class="section-sub" data-i18n="aiSub">Let our AI match you with the ideal room based on your preferences</p>
+      </div>
+      <div class="ai-card">
+        <div class="ai-form">
+          <div class="form-group">
+            <label>Your Budget (per night)</label>
+            <select id="aibudget">
+              <option value="100">Under $100</option>
+              <option value="200">$100 – $200</option>
+              <option value="350">$200 – $350</option>
+              <option value="999">$350+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Number of Guests</label>
+            <select id="aiguests">
+              <option value="1">1 Guest (Solo)</option>
+              <option value="2">2 Guests (Couple)</option>
+              <option value="3">3–4 Guests (Family)</option>
+              <option value="5">5+ Guests (Group)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="runAIRecommend()" style="width:100%;margin-bottom:20px;">
+          <i class="fa fa-robot" style="margin-right:8px"></i><span data-i18n="getAiRecommendation">Get AI Recommendation</span>
+        </button>
+        <div class="ai-thinking" id="aiThinking" data-i18n="aiThinkingText">✦ AI is analyzing your preferences…</div>
+        <div class="ai-result" id="aiResult">
+          <div class="ai-icon">🤖</div>
+          <div class="ai-result-text">
+            <h4 id="aiRoomName">Deluxe Sea View Room</h4>
+            <p id="aiReason">Based on your budget and guest count, this is our best match.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" style="background:var(--bg);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag" data-i18n="whyAutomateX">Why AutomateX</div>
+        <h2 class="section-title">Powered by <span class="gradient-text">Intelligence</span></h2>
+        <p class="section-sub" data-i18n="featuresSub">Smart features that elevate every stay into an unforgettable experience</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feat-icon blue"><i class="fa fa-robot"></i></div>
+          <h3>AI Smart Booking</h3>
+          <p>Intelligent recommendations that learn from your preferences and suggest the perfect room.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon purple"><i class="fa fa-chart-line"></i></div>
+          <h3>Dynamic Pricing</h3>
+          <p>Real-time pricing algorithms ensure you always get the best value for your stay.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon gold"><i class="fa fa-bolt"></i></div>
+          <h3>Instant Confirmation</h3>
+          <p>Book in seconds with immediate confirmation sent directly to your inbox.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon red"><i class="fa fa-shield-halved"></i></div>
+          <h3>Secure Payments</h3>
+          <p>Bank-level encryption protects every transaction with multi-layer security.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon blue"><i class="fa fa-mobile-alt"></i></div>
+          <h3>Mobile Optimized</h3>
+          <p>Seamlessly manage your booking from any device, anytime, anywhere.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feat-icon purple"><i class="fa fa-comments"></i></div>
+          <h3>24/7 AI Concierge</h3>
+          <p>Our AI chatbot handles every query instantly, so you're never left waiting.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-brand-head">
+            <img src="./Images/logo.png" alt="AutomateX logo" class="brand-logo-img">
+            <div>
+              <h3>AutomateX Hotel</h3>
+            </div>
+          </div>
+          <p>Redefining luxury hospitality through the power of artificial intelligence and seamless digital experiences.</p>
+          <div class="social-links">
+            <a class="social-link"><i class="fab fa-instagram"></i></a>
+            <a class="social-link"><i class="fab fa-twitter"></i></a>
+            <a class="social-link"><i class="fab fa-facebook"></i></a>
+            <a class="social-link"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Rooms</h4>
+          <ul>
+            <li><a>Standard Room</a></li>
+            <li><a>Deluxe Room</a></li>
+            <li><a>Sea View Suite</a></li>
+            <li><a>Presidential Suite</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a>About Us</a></li>
+            <li><a>Careers</a></li>
+            <li><a>Press</a></li>
+            <li><a onclick="switchPage('loginPage')">Admin</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a><i class="fa fa-phone" style="margin-right:8px;color:var(--neon)"></i>+94 71 186 1722 </a></li>
+            <li><a><i class="fa fa-envelope" style="margin-right:8px;color:var(--neon)"></i>automatex.lk</a></li>
+            <li><a><i class="fa fa-location-dot" style="margin-right:8px;color:var(--neon)"></i>123 Hatton, Sri Lanka</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 AutomateX AI Hotel System. All rights reserved.</p>
+        <p>Built with <span style="color:var(--neon3)">♥</span> and Artificial Intelligence</p>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- end websitePage -->
+
+<!-- ═══════════════════════════════════════════
+     PAGE: LOGIN
+═══════════════════════════════════════════ -->
+<div class="page" id="loginPage">
+  <div class="login-page">
+    <div class="orb orb1" style="opacity:.4"></div>
+    <div class="orb orb2" style="opacity:.4"></div>
+    <div class="login-card">
+      <div style="position:absolute;top:20px;left:20px;">
+        <button onclick="switchPage('websitePage')" style="background:var(--glass2);border:1px solid var(--border);color:var(--text2);padding:8px 16px;border-radius:50px;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fa fa-arrow-left"></i> Back</button>
+      </div>
+      <div class="login-logo">
+        <div class="login-logo-mark">
+          <img src="./Images/logo.png" alt="AutomateX logo" class="brand-logo-img large">
+        </div>
+        <h2>AutomateX</h2>
+        <p>Hotel Management System</p>
+      </div>
+      <div class="login-tabs">
+        <div class="login-tab active" id="tabAdmin" onclick="switchTab('admin')">Admin Login</div>
+        <div class="login-tab" id="tabStaff" onclick="switchTab('staff')">Staff Login</div>
+      </div>
+      <div class="login-form">
+        <div class="form-group">
+          <label style="font-size:.8rem;color:var(--text2);font-weight:600;">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="admin@automatex.ai" value="admin@automatex.ai">
+        </div>
+        <div class="form-group">
+          <label style="font-size:.8rem;color:var(--text2);font-weight:600;">Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••" value="admin123">
+        </div>
+        <button class="login-btn" onclick="doLogin()"><i class="fa fa-sign-in-alt" style="margin-right:8px"></i>Sign In</button>
+        <div class="demo-creds">
+          <strong>Demo Admin:</strong> admin@automatex.ai / admin123<br>
+          <strong>Demo Staff:</strong> staff@automatex.ai / staff123
+        </div>
+        <div class="login-hint">Admins have full control. Staff can view bookings and update booking status only.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     PAGE: ADMIN DASHBOARD
+═══════════════════════════════════════════ -->
+<div class="page" id="adminPage">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="adminSidebar">
+    <div class="sidebar-logo">
+      <div class="nav-logo">
+        <img src="./Images/logo.png" alt="AutomateX logo" class="brand-logo-img small">
+        <span class="brand-logo-text">
+          <span>AutomateX<span>.</span></span>
+          <span class="brand-logo-sub">AI Hotel Suite</span>
+        </span>
+      </div>
+      <p>Hotel Management System</p>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <div class="sidebar-item active" onclick="showPanel('dashboard',this)"><i class="fa fa-chart-pie"></i>Dashboard</div>
+      <div class="sidebar-item" onclick="showPanel('bookings',this)"><i class="fa fa-calendar-check"></i>Bookings</div>
+      <div class="sidebar-item" onclick="showPanel('calendar',this)"><i class="fa fa-calendar-days"></i>Calendar</div>
+      <div class="sidebar-item admin-only" data-role-only="admin" onclick="showPanel('rooms',this)"><i class="fa fa-bed"></i>Rooms</div>
+      <div class="sidebar-item admin-only" data-role-only="admin" onclick="showPanel('customers',this)"><i class="fa fa-users"></i>Customers</div>
+      <div class="sidebar-section">AI</div>
+      <div class="sidebar-item admin-only" data-role-only="admin" onclick="showPanel('insights',this)"><i class="fa fa-brain"></i>AI Insights</div>
+      <div class="sidebar-section">System</div>
+      <div class="sidebar-item" onclick="switchPage('websitePage')"><i class="fa fa-globe"></i>View Website</div>
+      <div class="sidebar-item" onclick="switchPage('loginPage')"><i class="fa fa-sign-out-alt"></i>Sign Out</div>
+    </nav>
+  </div>
+
+  <!-- MAIN -->
+  <div class="admin-main">
+    <div class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="admin-menu-btn" onclick="toggleSidebar()" aria-label="Toggle admin menu"><i class="fa fa-bars"></i></button>
+        <div class="topbar-title" id="adminTitle">Dashboard Overview</div>
+      </div>
+      <div class="topbar-right">
+        <select class="toolbar-select" id="languageToggle" onchange="setLanguage(this.value)">
+          <option value="en">English</option>
+          <option value="si">Sinhala</option>
+          <option value="ta">Tamil</option>
+        </select>
+        <button class="toolbar-btn" id="demoModeBtn" onclick="toggleDemoMode()"><i class="fa fa-wand-magic-sparkles"></i><span data-i18n="enableDemoMode">Enable Demo Mode</span></button>
+        <div class="role-pill" id="rolePill">Admin Access</div>
+        <div class="topbar-btn"><i class="fa fa-search"></i></div>
+        <div class="topbar-btn">
+          <i class="fa fa-bell"></i>
+          <div class="notif-badge">3</div>
+        </div>
+        <div class="admin-avatar" title="Admin User">AX</div>
+      </div>
+    </div>
+    <div class="admin-content">
+
+      <!-- DASHBOARD PANEL -->
+      <div class="admin-panel active" id="panel-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-card-icon"><i class="fa fa-calendar-check"></i></div>
+            <div class="stat-card-num" id="statBookings">47</div>
+            <div class="stat-card-label">Total Bookings</div>
+            <div class="stat-card-change"><i class="fa fa-arrow-up"></i> 12% this week</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-card-icon"><i class="fa fa-dollar-sign"></i></div>
+            <div class="stat-card-num" id="statRevenue">$24.8k</div>
+            <div class="stat-card-label">Revenue (Month)</div>
+            <div class="stat-card-change"><i class="fa fa-arrow-up"></i> 8.4% vs last month</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-card-icon"><i class="fa fa-bed"></i></div>
+            <div class="stat-card-num" id="statRooms">12</div>
+            <div class="stat-card-label">Active Rooms</div>
+            <div class="stat-card-change"><i class="fa fa-arrow-up"></i> 3 new this month</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-card-icon"><i class="fa fa-users"></i></div>
+            <div class="stat-card-num" id="statCustomers">183</div>
+            <div class="stat-card-label">Total Customers</div>
+            <div class="stat-card-change"><i class="fa fa-arrow-up"></i> 24 new this week</div>
+          </div>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-title">Weekly Bookings <span style="font-size:.8rem;color:var(--text3);font-weight:400">Apr 2025</span></div>
+            <div class="chart-sub">Bookings per day this week</div>
+            <div class="bar-chart" id="weeklyChart"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Room Types</div>
+            <div class="chart-sub">Booking distribution</div>
+            <div class="donut-wrap">
+              <svg class="donut-svg" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#0d1530" stroke-width="20"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#00d4ff" stroke-width="20" stroke-dasharray="94.2 220" stroke-dashoffset="-31" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#7b61ff" stroke-width="20" stroke-dasharray="62.8 220" stroke-dashoffset="-125" transform="rotate(-90 60 60)"/>
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#f0c040" stroke-width="20" stroke-dasharray="47.1 220" stroke-dashoffset="-188" transform="rotate(-90 60 60)"/>
+                <text x="60" y="64" text-anchor="middle" fill="#e8f0fe" font-size="12" font-weight="bold">47</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:var(--neon)"></div>Deluxe (30%)</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--neon2)"></div>Suite (20%)</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Standard (15%)</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--text3)"></div>Other (35%)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="assistant-card" id="assistantPanel">
+          <h3 data-i18n="aiAssistantTitle">AI Admin Assistant</h3>
+          <p data-i18n="aiAssistantSub">Operational guidance generated from live booking behavior, occupancy, and demand signals.</p>
+          <div class="assistant-insights" id="assistantInsights"></div>
+        </div>
+        <!-- Recent Bookings Mini Table -->
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Recent Bookings</h3>
+            <button class="btn-add" onclick="showPanel('bookings',null)" style="padding:8px 18px;font-size:.8rem;"><i class="fa fa-arrow-right"></i> View All</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="data-table" id="recentBookingsTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOKINGS PANEL -->
+      <div class="admin-panel" id="panel-bookings">
+        <div class="page-header">
+          <h2>Booking Management</h2>
+          <div class="panel-actions">
+            <button class="toolbar-btn" onclick="exportBookingsCSV()"><i class="fa fa-file-csv"></i><span data-i18n="exportBookings">Export Bookings</span></button>
+            <div class="search-bar">
+              <i class="fa fa-search"></i>
+              <input type="text" id="bookingSearch" placeholder="Search bookings..." oninput="filterBookings(this.value)">
+            </div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div style="overflow-x:auto;">
+            <table class="data-table" id="bookingsTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-panel" id="panel-calendar">
+        <div class="page-header">
+          <h2>Booking Calendar</h2>
+          <div class="role-pill" id="calendarOccupancyLabel">Occupancy View</div>
+        </div>
+        <div class="calendar-shell">
+          <div class="calendar-card">
+            <div class="calendar-head">
+              <div>
+                <h3 style="font-size:1.1rem;margin-bottom:6px;" id="calendarMonthLabel">April 2025</h3>
+                <p style="font-size:.82rem;color:var(--text2);">Booked dates glow in neon. Click a date to inspect occupancy and reservation details.</p>
+              </div>
+              <div class="calendar-nav">
+                <button onclick="changeCalendarMonth(-1)"><i class="fa fa-chevron-left"></i></button>
+                <button onclick="changeCalendarMonth(1)"><i class="fa fa-chevron-right"></i></button>
+              </div>
+            </div>
+            <div class="calendar-weekdays">
+              <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+          <div class="day-bookings-card">
+            <h3 style="font-size:1.1rem;">Date Snapshot</h3>
+            <p style="font-size:.82rem;color:var(--text2);margin-top:6px;" id="calendarSelectedDateLabel">Select a date to view live booking activity.</p>
+            <div class="day-bookings-list" id="dayBookingsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROOMS PANEL -->
+      <div class="admin-panel admin-only" data-role-only="admin" id="panel-rooms">
+        <div class="page-header">
+          <h2>Room Management</h2>
+          <button class="btn-add" onclick="showAddRoomModal()"><i class="fa fa-plus"></i> Add Room</button>
+        </div>
+        <div class="room-admin-grid" id="adminRoomsGrid"></div>
+      </div>
+
+      <!-- CUSTOMERS PANEL -->
+      <div class="admin-panel admin-only" data-role-only="admin" id="panel-customers">
+        <div class="page-header">
+          <h2>Customer Management</h2>
+          <div class="panel-actions">
+            <button class="toolbar-btn" onclick="exportCustomersCSV()"><i class="fa fa-file-export"></i><span data-i18n="exportCustomers">Export Customers</span></button>
+            <div class="search-bar">
+              <i class="fa fa-search"></i>
+              <input type="text" id="customerSearch" placeholder="Search customers...">
+            </div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div style="overflow-x:auto;">
+            <table class="data-table" id="customersTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- INSIGHTS PANEL -->
+      <div class="admin-panel admin-only" data-role-only="admin" id="panel-insights">
+        <div class="page-header"><h2>AI Smart Insights</h2></div>
+        <div class="insights-grid">
+          <div class="insight-card">
+            <h4>Most Booked Room</h4>
+            <div class="insight-value">Deluxe Sea View</div>
+            <div class="insight-sub">18 bookings this month</div>
+          </div>
+          <div class="insight-card">
+            <h4>Peak Booking Day</h4>
+            <div class="insight-value">Friday</div>
+            <div class="insight-sub">42% more bookings vs avg</div>
+          </div>
+          <div class="insight-card">
+            <h4>Avg Stay Duration</h4>
+            <div class="insight-value">3.2 nights</div>
+            <div class="insight-sub">↑ 0.4 nights vs last month</div>
+          </div>
+          <div class="insight-card">
+            <h4>Occupancy Rate</h4>
+            <div class="insight-value">78%</div>
+            <div class="insight-sub">Target: 85% — 7% gap</div>
+          </div>
+          <div class="insight-card">
+            <h4>Revenue per Room</h4>
+            <div class="insight-value">$2,066</div>
+            <div class="insight-sub">This month average</div>
+          </div>
+          <div class="insight-card">
+            <h4>Guest Satisfaction</h4>
+            <div class="insight-value" id="avgReviewInsight">4.9 / 5</div>
+            <div class="insight-sub" id="avgReviewInsightSub">Based on 83 reviews</div>
+          </div>
+        </div>
+        <div class="smart-insight-banner">
+          <h4 data-i18n="smartPricingInsight">Smart Pricing Insight</h4>
+          <p id="smartPricingMessage">High demand detected on weekends — consider increasing price by 10%.</p>
+        </div>
+        <div class="table-card" style="margin-top:24px;">
+          <div class="table-header"><h3 data-i18n="aiAssistantPanel">AI Assistant Watchlist</h3></div>
+          <div style="padding:24px;">
+            <div class="insight-bullet-list" id="insightWatchlist"></div>
+          </div>
+        </div>
+        <div class="table-card" style="margin-top:24px;">
+          <div class="table-header"><h3>⚠ Low Occupancy Alerts</h3></div>
+          <div style="padding:0 24px 16px;" id="alertsList"></div>
+        </div>
+      </div>
+
+    </div><!-- admin-content -->
+  </div><!-- admin-main -->
+
+  <!-- Mobile sidebar toggle -->
+  <div class="sidebar-toggle" onclick="toggleSidebar()"><i class="fa fa-bars"></i></div>
+</div><!-- end adminPage -->
+
+<!-- ═══════════════════════════════════════════
+     BOOKING MODAL
+═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Reserve Your Stay</h2>
+      <div class="modal-close" onclick="closeModal()"><i class="fa fa-times"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-steps">
+        <div class="step-dot active" id="stepDot1"></div>
+        <div class="step-dot" id="stepDot2"></div>
+        <div class="step-dot" id="stepDot3"></div>
+        <div class="step-dot" id="stepDot4"></div>
+      </div>
+      <!-- Step 1: Room -->
+      <div class="booking-step active" id="step1">
+        <div class="booking-room-summary">
+          <div class="booking-room-img" id="modalRoomImg">🏨</div>
+          <div class="booking-room-info">
+            <h4 id="modalRoomName">Room Name</h4>
+            <p id="modalRoomPrice">$0 / night</p>
+          </div>
+        </div>
+        <p style="font-size:.85rem;color:var(--text2);line-height:1.6;">You selected this room. Proceed to choose your dates and enter your details.</p>
+      </div>
+      <!-- Step 2: Dates -->
+      <div class="booking-step" id="step2">
+        <div class="modal-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Check-In Date</label>
+              <input type="date" id="checkIn" style="width:100%">
+            </div>
+            <div class="form-group">
+              <label>Check-Out Date</label>
+              <input type="date" id="checkOut" style="width:100%">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Number of Guests</label>
+            <select id="numGuests" style="width:100%">
+              <option>1 Guest</option>
+              <option>2 Guests</option>
+              <option>3 Guests</option>
+              <option>4 Guests</option>
+            </select>
+          </div>
+          <div id="nightSummary" style="background:var(--glass);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:.85rem;display:none;">
+            <div style="display:flex;justify-content:space-between;"><span>Duration</span><span id="nightCount" style="color:var(--neon);font-family:'Space Mono',monospace;"></span></div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-weight:600;"><span>Total</span><span id="totalPrice" style="color:var(--neon);font-family:'Space Mono',monospace;"></span></div>
+          </div>
+        </div>
+      </div>
+      <!-- Step 3: Details -->
+      <div class="booking-step" id="step3">
+        <div class="modal-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" id="guestFirstName" placeholder="John" style="width:100%">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" id="guestLastName" placeholder="Doe" style="width:100%">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="guestEmail" placeholder="john@example.com" style="width:100%">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="guestPhone" placeholder="+1 (555) 0100" style="width:100%">
+          </div>
+          <div class="form-group">
+            <label>Special Requests (optional)</label>
+            <input type="text" placeholder="e.g. High floor, extra pillows" style="width:100%">
+          </div>
+          <div>
+            <div style="font-size:.8rem;color:var(--text3);margin-bottom:8px;font-weight:600;">Simulated Payment</div>
+            <div class="form-group">
+              <input type="text" placeholder="4242 4242 4242 4242" style="width:100%">
+            </div>
+            <div class="form-row">
+              <div class="form-group"><input type="text" placeholder="MM/YY" style="width:100%"></div>
+              <div class="form-group"><input type="text" placeholder="CVV" style="width:100%"></div>
+            </div>
+            <div class="payment-icons">
+              <div class="pay-icon">💳 Visa</div>
+              <div class="pay-icon">💳 MC</div>
+              <div class="pay-icon">💳 Amex</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Step 4: Confirm -->
+      <div class="booking-step" id="step4">
+        <div class="confirm-summary" id="confirmSummary"></div>
+      </div>
+      <!-- Step 5: Success -->
+      <div class="booking-step" id="step5">
+        <div class="success-screen">
+          <div class="success-icon">✓</div>
+          <h3>Booking Confirmed!</h3>
+          <p>Your reservation has been successfully placed and is ready for guest communication.</p>
+          <p style="font-size:.8rem;color:var(--text3);">Invoice, booking details, and WhatsApp handoff are ready below.</p>
+          <div class="booking-id" id="bookingIdDisplay"></div>
+          <div class="success-actions">
+            <button class="btn-next" onclick="downloadInvoice()"><i class="fa fa-file-arrow-down" style="margin-right:8px"></i>Download Invoice</button>
+            <button class="btn-back" style="display:block;color:var(--text);" onclick="sendViaWhatsApp()"><i class="fab fa-whatsapp" style="margin-right:8px;color:#25D366"></i>Send via WhatsApp</button>
+          </div>
+          <div class="invoice-card" id="invoiceCard"></div>
+          <div class="payment-ready-label"><i class="fa fa-circle-check"></i>Online Payment Ready (Stripe / PayHere Integration Supported)</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" id="modalFooter">
+      <button class="btn-back" id="btnBack" onclick="prevStep()" style="display:none">Back</button>
+      <button class="btn-next" id="btnNext" onclick="nextStep()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AI CHATBOT
+═══════════════════════════════════════════ -->
+<div class="chat-fab" id="chatFab" onclick="toggleChat()"><i class="fa fa-comments"></i></div>
+<div class="chat-window" id="chatWindow">
+  <div class="chat-head">
+    <div class="chat-avatar">🤖</div>
+    <div class="chat-head-info">
+      <h4>AutomateX AI</h4>
+      <p>Online — always here to help</p>
+    </div>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-quick" id="chatQuick">
+    <div class="quick-btn" onclick="sendQuick('What rooms are available?')">🛏 Rooms</div>
+    <div class="quick-btn" onclick="sendQuick('What are your prices?')">💰 Prices</div>
+    <div class="quick-btn" onclick="sendQuick('How do I book?')">📅 Booking</div>
+    <div class="quick-btn" onclick="sendQuick('Do you have WiFi?')">📶 Amenities</div>
+  </div>
+  <div class="chat-input-row">
+    <input class="chat-input" id="chatInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()"><i class="fa fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<!-- ADD ROOM MODAL -->
+<div class="modal-overlay" id="addRoomModal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-header">
+      <h2>Add New Room</h2>
+      <div class="modal-close" onclick="closeAddRoom()"><i class="fa fa-times"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-form">
+        <div class="form-group"><label>Room Name</label><input type="text" id="newRoomName" placeholder="e.g. Ocean Suite" style="width:100%"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Price / night</label><input type="number" id="newRoomPrice" placeholder="250" style="width:100%"></div>
+          <div class="form-group"><label>Max Guests</label><input type="number" id="newRoomGuests" placeholder="2" style="width:100%"></div>
+        </div>
+        <div class="form-group"><label>Description</label><input type="text" id="newRoomDesc" placeholder="Brief description..." style="width:100%"></div>
+        <div class="form-group">
+          <label>Room Emoji (icon)</label>
+          <select id="newRoomEmoji" style="width:100%">
+            <option value="🌅">🌅 Sea View</option>
+            <option value="🏔">🏔 Mountain View</option>
+            <option value="🌃">🌃 City View</option>
+            <option value="🛁">🛁 Spa Room</option>
+            <option value="🌿">🌿 Garden Room</option>
+            <option value="👑">👑 Presidential</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-back" onclick="closeAddRoom()">Cancel</button>
+      <button class="btn-next" onclick="addRoom()"><i class="fa fa-plus" style="margin-right:6px"></i>Add Room</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+const ROOMS = [
+  {id:1,name:'Standard Room',price:89,guests:2,desc:'Comfortable and cozy with modern amenities',emoji:'🌙',features:['WiFi','AC','TV','Minibar'],available:true,badge:'Best Value'},
+  {id:2,name:'Deluxe Sea View',price:189,guests:2,desc:'Breathtaking ocean panoramas with luxury furnishings',emoji:'🌅',features:['WiFi','AC','Sea View','Balcony','Spa'],available:true,badge:'Most Popular'},
+  {id:3,name:'Mountain Retreat',price:149,guests:3,desc:'Serene mountain views with forest surroundings',emoji:'🏔',features:['WiFi','AC','Mountain View','Fireplace'],available:true,badge:'New'},
+  {id:4,name:'City Panorama Suite',price:229,guests:4,desc:'Stunning city skyline views from every angle',emoji:'🌃',features:['WiFi','AC','City View','Lounge','Bar'],available:false,badge:'Sold Out'},
+  {id:5,name:'Garden Sanctuary',price:119,guests:2,desc:'Private garden access with lush greenery',emoji:'🌿',features:['WiFi','AC','Garden','Patio','BBQ'],available:true,badge:'Serene'},
+  {id:6,name:'Presidential Suite',price:499,guests:6,desc:'The pinnacle of luxury — unmatched in every way',emoji:'👑',features:['WiFi','AC','Butler','Private Pool','Chef'],available:true,badge:'Exclusive'},
+];
+
+const BOOKINGS = [
+  {id:'BK-0041',guest:'Emma Johnson',room:'Deluxe Sea View',checkIn:'2025-04-18',checkOut:'2025-04-21',status:'confirmed',total:'$567'},
+  {id:'BK-0040',guest:'James Wilson',room:'Presidential Suite',checkIn:'2025-04-19',checkOut:'2025-04-22',status:'confirmed',total:'$1,497'},
+  {id:'BK-0039',guest:'Sophia Martinez',room:'Standard Room',checkIn:'2025-04-20',checkOut:'2025-04-23',status:'pending',total:'$267'},
+  {id:'BK-0038',guest:'Liam Chen',room:'Garden Sanctuary',checkIn:'2025-04-15',checkOut:'2025-04-17',status:'confirmed',total:'$238'},
+  {id:'BK-0037',guest:'Olivia Smith',room:'Mountain Retreat',checkIn:'2025-04-12',checkOut:'2025-04-14',status:'cancelled',total:'$298'},
+  {id:'BK-0036',guest:'Noah Davis',room:'Deluxe Sea View',checkIn:'2025-04-10',checkOut:'2025-04-13',status:'confirmed',total:'$567'},
+];
+
+const CUSTOMERS = [
+  {name:'Emma Johnson',email:'emma@example.com',phone:'+1 555-0101',bookings:3,spent:'$1,234',joined:'Mar 2025'},
+  {name:'James Wilson',email:'james@example.com',phone:'+1 555-0102',bookings:5,spent:'$3,891',joined:'Jan 2025'},
+  {name:'Sophia Martinez',email:'sophia@example.com',phone:'+1 555-0103',bookings:1,spent:'$267',joined:'Apr 2025'},
+  {name:'Liam Chen',email:'liam@example.com',phone:'+1 555-0104',bookings:2,spent:'$476',joined:'Feb 2025'},
+  {name:'Olivia Smith',email:'olivia@example.com',phone:'+1 555-0105',bookings:4,spent:'$1,782',joined:'Dec 2024'},
+  {name:'Noah Davis',email:'noah@example.com',phone:'+1 555-0106',bookings:2,spent:'$888',joined:'Feb 2025'},
+];
+
+const REVIEWS = {
+  1:[
+    {name:'Sarah P.',rating:4,comment:'Very comfortable for a short stay and the smart check-in experience felt polished.'},
+    {name:'Daniel K.',rating:5,comment:'Excellent value and a smooth guest journey from booking to checkout.'}
+  ],
+  2:[
+    {name:'Amelia R.',rating:5,comment:'Sea view, premium finish, and a five-star digital experience.'},
+    {name:'Chris T.',rating:4,comment:'Loved the balcony and responsive service updates.'}
+  ],
+  3:[
+    {name:'Mia L.',rating:5,comment:'Peaceful, scenic, and perfect for a long weekend reset.'}
+  ],
+  4:[
+    {name:'Aiden N.',rating:4,comment:'Fantastic skyline views and a luxury suite atmosphere.'}
+  ],
+  5:[
+    {name:'Nethmi S.',rating:5,comment:'Garden access made the stay feel private and restorative.'}
+  ],
+  6:[
+    {name:'Oliver B.',rating:5,comment:'This suite absolutely feels client-presentation ready. Premium all around.'}
+  ]
+};
+
+const TRANSLATIONS = {
+  en:{
+    navRooms:'Rooms',navAiPicks:'AI Picks',navFeatures:'Features',navAdmin:'Admin',bookNow:'Book Now',
+    adminLogin:'Admin Login',heroBadge:'✦ AI-Powered Luxury Hotel System',heroText:'AutomateX redefines hotel hospitality — intelligent booking, personalized recommendations, and seamless experiences crafted by AI.',
+    exploreRooms:'Explore Rooms',ourCollection:'Our Collection',roomsSub:'Each room crafted for perfection — where elegance meets smart technology',
+    smartAi:'Smart AI',aiSub:'Let our AI match you with the ideal room based on your preferences',getAiRecommendation:'Get AI Recommendation',
+    aiThinkingText:'✦ AI is analyzing your preferences…',whyAutomateX:'Why AutomateX',featuresSub:'Smart features that elevate every stay into an unforgettable experience',
+    enableDemoMode:'Enable Demo Mode',disableDemoMode:'Disable Demo Mode',exportBookings:'Export Bookings',exportCustomers:'Export Customers',
+    aiAssistantTitle:'AI Admin Assistant',aiAssistantSub:'Operational guidance generated from live booking behavior, occupancy, and demand signals.',
+    smartPricingInsight:'Smart Pricing Insight',aiAssistantPanel:'AI Assistant Watchlist',reviewsTitle:'Guest Reviews',addReview:'Add Review',noReviews:'No guest reviews yet.',averageRating:'Average Rating',
+    reviewPlaceholder:'Share your experience',submitReview:'Submit',bookingCreated:'New booking created',demoEnabled:'Demo mode enabled',demoDisabled:'Demo mode disabled'
+  },
+  si:{
+    navRooms:'කාමර',navAiPicks:'AI තේරීම්',navFeatures:'විශේෂාංග',navAdmin:'පරිපාලක',bookNow:'දැන් වෙන්කරන්න',
+    adminLogin:'පරිපාලක පිවිසුම',heroBadge:'✦ AI බලගත් හෝටල් පද්ධතිය',heroText:'AutomateX හෝටල් ආගන්තුක සත්කාරය බුද්ධිමත් වෙන්කිරීම් සහ නවීන අත්දැකීම් සමඟ නැවත නිර්වචනය කරයි.',
+    exploreRooms:'කාමර බලන්න',ourCollection:'අපගේ එකතුව',roomsSub:'සෑම කාමරයක්ම අලංකාරය හා ස්මාර්ට් තාක්ෂණය සමඟ නිර්මාණය කර ඇත',
+    smartAi:'ස්මාර්ට් AI',aiSub:'ඔබගේ කැමැත්ත අනුව සුදුසුම කාමරය AI මඟින් තෝරන්න',getAiRecommendation:'AI නිර්දේශය ලබාගන්න',
+    aiThinkingText:'✦ AI ඔබගේ තේරීම් විශ්ලේෂණය කරයි…',whyAutomateX:'ඇයි AutomateX',featuresSub:'සෑම නවාතැන් අත්දැකීමක්ම උසස් කරන බුද්ධිමත් විශේෂාංග',
+    enableDemoMode:'ඩෙමෝ ප්‍රකාරය සක්‍රීය කරන්න',disableDemoMode:'ඩෙමෝ ප්‍රකාරය නවත්වන්න',exportBookings:'වෙන්කිරීම් අපනයනය',exportCustomers:'පාරිභෝගිකයින් අපනයනය',
+    aiAssistantTitle:'AI පරිපාලන සහායක',aiAssistantSub:'සජීවී වෙන්කිරීම්, පිරවුම් මට්ටම් සහ ඉල්ලුම අනුව නිර්දේශ.',
+    smartPricingInsight:'ස්මාර්ට් මිල දැක්ම',aiAssistantPanel:'AI අවධානම් ලැයිස්තුව',reviewsTitle:'අමුත්තන්ගේ ප්‍රතිචාර',addReview:'ප්‍රතිචාර එක් කරන්න',noReviews:'තවමත් ප්‍රතිචාර නැත.',averageRating:'සාමාන්‍ය අගය',
+    reviewPlaceholder:'ඔබගේ අදහස ලියන්න',submitReview:'යවන්න',bookingCreated:'නව වෙන්කිරීමක් නිර්මාණය විය',demoEnabled:'ඩෙමෝ ප්‍රකාරය සක්‍රීයයි',demoDisabled:'ඩෙමෝ ප්‍රකාරය නවත්වන ලදි'
+  },
+  ta:{
+    navRooms:'அறைகள்',navAiPicks:'AI தேர்வுகள்',navFeatures:'அம்சங்கள்',navAdmin:'நிர்வாகம்',bookNow:'இப்போது முன்பதிவு செய்',
+    adminLogin:'நிர்வாக உள்நுழைவு',heroBadge:'✦ AI இயங்கும் ஹோட்டல் அமைப்பு',heroText:'AutomateX புத்திசாலி முன்பதிவு, தனிப்பயன் பரிந்துரைகள் மற்றும் மென்மையான அனுபவங்களால் விருந்தோம்பலை மாற்றுகிறது.',
+    exploreRooms:'அறைகள் பார்க்க',ourCollection:'எங்கள் தொகுப்பு',roomsSub:'ஒவ்வொரு அறையும் அழகும் ஸ்மார்ட் தொழில்நுட்பமும் இணைந்து வடிவமைக்கப்பட்டது',
+    smartAi:'ஸ்மார்ட் AI',aiSub:'உங்கள் விருப்பங்களுக்கு ஏற்ற அறையை எங்கள் AI தேர்ந்தெடுக்கட்டும்',getAiRecommendation:'AI பரிந்துரை பெறுக',
+    aiThinkingText:'✦ AI உங்கள் விருப்பங்களை பகுப்பாய்வு செய்கிறது…',whyAutomateX:'ஏன் AutomateX',featuresSub:'ஒவ்வொரு தங்குதவியையும் உயர்த்தும் புத்திசாலி அம்சங்கள்',
+    enableDemoMode:'டெமோ முறையை இயக்கு',disableDemoMode:'டெமோ முறையை நிறுத்து',exportBookings:'முன்பதிவுகளை ஏற்றுமதி செய்',exportCustomers:'வாடிக்கையாளர்களை ஏற்றுமதி செய்',
+    aiAssistantTitle:'AI நிர்வாக உதவியாளர்',aiAssistantSub:'நேரடி முன்பதிவு, நிரப்பம் மற்றும் தேவை தரவுகளின் அடிப்படையிலான செயல்பாட்டு வழிகாட்டல்.',
+    smartPricingInsight:'ஸ்மார்ட் விலை அறிவுரை',aiAssistantPanel:'AI கவனிப்புப் பட்டியல்',reviewsTitle:'விருந்தினர் மதிப்புரைகள்',addReview:'மதிப்புரை சேர்',noReviews:'இன்னும் மதிப்புரைகள் இல்லை.',averageRating:'சராசரி மதிப்பீடு',
+    reviewPlaceholder:'உங்கள் அனுபவத்தை பகிருங்கள்',submitReview:'சமர்ப்பிக்க',bookingCreated:'புதிய முன்பதிவு உருவாக்கப்பட்டது',demoEnabled:'டெமோ முறை செயல்படுத்தப்பட்டது',demoDisabled:'டெமோ முறை நிறுத்தப்பட்டது'
+  }
+};
+
+let currentStep = 1;
+let selectedRoom = null;
+let bookingsData = [...BOOKINGS];
+let customersData = [...CUSTOMERS];
+let currentRole = 'admin';
+let currentUserName = 'Admin User';
+let currentBookingDetails = null;
+let calendarDate = new Date(2025, 3, 1);
+let selectedCalendarDate = null;
+let reviewsData = JSON.parse(JSON.stringify(REVIEWS));
+let expandedRoomId = null;
+let currentLanguage = 'en';
+let demoModeEnabled = false;
+let demoInterval = null;
+let notificationSoundEnabled = true;
+
+const ROOM_IMAGE_MAP = {
+  'standard room': './Images/Standard Room.jpg',
+  'deluxe sea view': './Images/Deluxe Sea View.jpg.webp',
+  'mountain retreat': './Images/Mountain Retreat.webp',
+  'city panorama suite': './Images/City Panorama Suite.jpg',
+  'garden sanctuary': './Images/Garden Sanctuary.webp',
+  'presidential suite': './Images/Presidential Suite.jpg'
+};
+
+function getRoomImagePath(roomName=''){
+  const normalized = roomName.toLowerCase().trim();
+  return ROOM_IMAGE_MAP[normalized] || '';
+}
+
+function getRoomVisualMarkup(room, className='room-photo'){
+  const src = getRoomImagePath(room.name);
+  if(src){
+    return `<img src="${src}" alt="${room.name}" class="${className}" loading="lazy" decoding="async" onerror="this.outerHTML='<div class=&quot;room-photo-fallback&quot;>${room.emoji}</div>'">`;
+  }
+  return `<div class="room-photo-fallback">${room.emoji}</div>`;
+}
+
+function getRoomReviews(roomId){
+  return reviewsData[roomId] || [];
+}
+
+function getAverageRating(roomId){
+  const list = getRoomReviews(roomId);
+  if(!list.length) return 0;
+  return list.reduce((sum, review)=>sum + review.rating, 0) / list.length;
+}
+
+function renderStars(rating){
+  const rounded = Math.round(rating);
+  return '★'.repeat(rounded) + '☆'.repeat(Math.max(0, 5 - rounded));
+}
+
+function getPricingInsight(){
+  const weekendBookings = bookingsData.filter(b=>{
+    const day = new Date(b.checkIn).getDay();
+    return day === 5 || day === 6 || day === 0;
+  }).length;
+  const weekdayBookings = Math.max(1, bookingsData.length - weekendBookings);
+  return weekendBookings >= weekdayBookings * 0.75
+    ? 'High demand detected on weekends — consider increasing price by 10%.'
+    : 'Demand is balanced across weekdays — maintain current pricing and test value-add packages.';
+}
+
+function getPeakBookingDay(){
+  const counts = {};
+  bookingsData.forEach(b=>{
+    const label = new Date(b.checkIn).toLocaleDateString('en-US',{weekday:'long'});
+    counts[label] = (counts[label] || 0) + 1;
+  });
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0] || 'Friday';
+}
+
+// ═══ PAGE SYSTEM ═══
+function switchPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('mobileMenu')?.classList.remove('open');
+  document.getElementById('adminSidebar')?.classList.remove('open');
+  window.scrollTo(0,0);
+}
+
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
+function scrollTo(id){
+  const go = ()=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    document.getElementById('mobileMenu')?.classList.remove('open');
+    const navOffset = document.querySelector('#websitePage nav')?.offsetHeight || 72;
+    const top = el.getBoundingClientRect().top + window.scrollY - navOffset + 2;
+    window.scrollTo({top,behavior:'smooth'});
+  };
+  if(!document.getElementById('websitePage').classList.contains('active')){
+    switchPage('websitePage');
+    requestAnimationFrame(()=>requestAnimationFrame(go));
+  } else {
+    go();
+  }
+}
+
+function toggleMobile(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+function toggleRoomDetails(roomId){
+  expandedRoomId = expandedRoomId === roomId ? null : roomId;
+  renderRooms();
+}
+
+function t(key){
+  return (TRANSLATIONS[currentLanguage] && TRANSLATIONS[currentLanguage][key]) || TRANSLATIONS.en[key] || key;
+}
+
+function setLanguage(lang){
+  currentLanguage = TRANSLATIONS[lang] ? lang : 'en';
+  const toggle = document.getElementById('languageToggle');
+  if(toggle) toggle.value = currentLanguage;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    el.textContent = t(el.dataset.i18n);
+  });
+  const bookingSearch = document.getElementById('bookingSearch');
+  if(bookingSearch) bookingSearch.placeholder = currentLanguage === 'si' ? 'වෙන්කිරීම් සොයන්න...' : currentLanguage === 'ta' ? 'முன்பதிவுகளை தேடுங்கள்...' : 'Search bookings...';
+  const customerSearch = document.getElementById('customerSearch');
+  if(customerSearch) customerSearch.placeholder = currentLanguage === 'si' ? 'පාරිභෝගිකයින් සොයන්න...' : currentLanguage === 'ta' ? 'வாடிக்கையாளர்களை தேடுங்கள்...' : 'Search customers...';
+  const demoLabel = document.querySelector('#demoModeBtn span');
+  if(demoLabel) demoLabel.textContent = demoModeEnabled ? t('disableDemoMode') : t('enableDemoMode');
+  renderRooms();
+  renderAssistantPanel();
+}
+
+// ═══ TOAST ═══
+function showToast(msg,type='success'){
+  const t = document.getElementById('toastContainer');
+  const d = document.createElement('div');
+  d.className = `toast ${type}`;
+  d.innerHTML = `<span class="toast-icon">${type==='success'?'✓':'✕'}</span>${msg}`;
+  t.appendChild(d);
+  setTimeout(()=>{d.style.opacity='0';d.style.transition='.3s';setTimeout(()=>d.remove(),300);},3000);
+}
+
+function showLiveNotification(title, message){
+  const stack = document.getElementById('notificationStack');
+  if(!stack) return;
+  const item = document.createElement('div');
+  item.className = 'live-notification';
+  item.innerHTML = `<h4>${title}</h4><p>${message}</p>`;
+  stack.prepend(item);
+  if(notificationSoundEnabled && 'AudioContext' in window){
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 880;
+    gain.gain.value = 0.03;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.12);
+  }
+  setTimeout(()=>item.remove(), 5000);
+}
+
+function addRippleEffect(event){
+  const btn = event.currentTarget;
+  if(!btn) return;
+  const circle = document.createElement('span');
+  const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+  const radius = diameter / 2;
+  circle.style.width = circle.style.height = `${diameter}px`;
+  circle.style.left = `${event.clientX - btn.getBoundingClientRect().left - radius}px`;
+  circle.style.top = `${event.clientY - btn.getBoundingClientRect().top - radius}px`;
+  circle.className = 'ripple';
+  const ripple = btn.getElementsByClassName('ripple')[0];
+  if(ripple) ripple.remove();
+  btn.style.position = 'relative';
+  btn.style.overflow = 'hidden';
+  btn.appendChild(circle);
+}
+
+// ═══ ROOMS RENDER ═══
+function renderRooms(){
+  const g = document.getElementById('roomsGrid');
+  g.innerHTML = Array.from({length:3},()=>`
+    <div class="skeleton-room skeleton-card">
+      <div class="skeleton-thumb skeleton-card"></div>
+      <div class="skeleton-line medium"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+      <div class="skeleton-pill"></div>
+    </div>
+  `).join('');
+  setTimeout(()=>{
+  g.innerHTML = ROOMS.map(r=>`
+    <div class="room-card ${expandedRoomId===r.id?'expanded':''}" role="button" tabindex="0" onclick="toggleRoomDetails(${r.id})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRoomDetails(${r.id})}">
+      <div class="room-img-wrap">
+        ${getRoomVisualMarkup(r)}
+        <div class="room-badge ${!r.available?'sold':''}">${r.badge}</div>
+      </div>
+      <div class="room-body">
+        <div class="room-name">${r.name}</div>
+        <div class="room-desc">${r.desc}</div>
+        <div class="rating-row">
+          <div class="rating-pill">
+            <span class="rating-stars">${renderStars(getAverageRating(r.id) || 5)}</span>
+            <span>${(getAverageRating(r.id) || 5).toFixed(1)} ${t('averageRating')}</span>
+          </div>
+          <div class="rating-pill">${getRoomReviews(r.id).length} reviews</div>
+        </div>
+        <div class="room-features">${r.features.slice(0,4).map(f=>`<div class="feature-tag"><i class="fa fa-check" style="color:var(--neon);font-size:.6rem"></i>${f}</div>`).join('')}</div>
+        <div class="room-footer">
+          <div class="room-price">
+            <span class="price-amount">$${r.price}</span>
+            <span class="price-per"> / night</span>
+          </div>
+          <button class="btn-book" ${!r.available?'disabled':''} onclick="event.stopPropagation();${r.available?`openBooking(${r.id})`:'void(0)'}">
+            ${r.available?t('bookNow'):'Sold Out'}
+          </button>
+        </div>
+        <div class="reviews-wrap" onclick="event.stopPropagation()">
+          <div class="reviews-head">
+            <h4>${t('reviewsTitle')}</h4>
+            <span class="rating-pill">${(getAverageRating(r.id) || 5).toFixed(1)} / 5</span>
+          </div>
+          <div class="review-list">
+            ${(getRoomReviews(r.id).slice(0,2).map(review=>`
+              <div class="review-item">
+                <strong>${review.name} • ${renderStars(review.rating)}</strong>
+                <p>${review.comment}</p>
+              </div>
+            `).join('')) || `<div class="review-empty">${t('noReviews')}</div>`}
+          </div>
+          <div class="review-form">
+            <select id="reviewRating${r.id}">
+              <option value="5">5 ★</option>
+              <option value="4">4 ★</option>
+              <option value="3">3 ★</option>
+              <option value="2">2 ★</option>
+              <option value="1">1 ★</option>
+            </select>
+            <input type="text" id="reviewComment${r.id}" placeholder="${t('reviewPlaceholder')}">
+            <button onclick="submitReview(${r.id})">${t('submitReview')}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  attachRippleEffects();
+  }, 380);
+}
+
+// ═══ BOOKING MODAL ═══
+function openBooking(roomId){
+  selectedRoom = ROOMS.find(r=>r.id===roomId);
+  currentStep = 1;
+  renderModalRoom();
+  updateStepUI();
+  document.getElementById('bookingModal').classList.add('open');
+  // Set min dates
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('checkIn').min = today;
+  document.getElementById('checkOut').min = today;
+}
+
+function renderModalRoom(){
+  document.getElementById('modalRoomImg').innerHTML = getRoomVisualMarkup(selectedRoom,'booking-room-photo');
+  document.getElementById('modalRoomName').textContent = selectedRoom.name;
+  document.getElementById('modalRoomPrice').textContent = `$${selectedRoom.price} / night`;
+}
+
+function closeModal(){
+  document.getElementById('bookingModal').classList.remove('open');
+}
+
+function updateStepUI(){
+  for(let i=1;i<=5;i++){
+    const s = document.getElementById('step'+i);
+    if(s) s.classList.toggle('active', i===currentStep);
+  }
+  for(let i=1;i<=4;i++){
+    const d = document.getElementById('stepDot'+i);
+    if(d){
+      d.classList.toggle('active', i===currentStep);
+      d.classList.toggle('done', i<currentStep);
+    }
+  }
+  const back = document.getElementById('btnBack');
+  const next = document.getElementById('btnNext');
+  if(back) back.style.display = currentStep>1 && currentStep<5 ? 'block':'none';
+  if(next){
+    if(currentStep===4) next.textContent = '✓ Confirm Booking';
+    else if(currentStep===5) next.textContent = 'Done';
+    else next.textContent = 'Continue';
+  }
+}
+
+function nextStep(){
+  if(currentStep===4){
+    confirmBooking(); return;
+  }
+  if(currentStep===5){ closeModal(); return; }
+  if(currentStep===2) updateNightSummary();
+  if(currentStep===3) buildConfirmSummary();
+  currentStep++;
+  updateStepUI();
+}
+
+function prevStep(){
+  if(currentStep>1){ currentStep--; updateStepUI(); }
+}
+
+// Date change listeners
+document.getElementById('checkIn').addEventListener('change', updateNightSummary);
+document.getElementById('checkOut').addEventListener('change', updateNightSummary);
+
+function updateNightSummary(){
+  const ci = document.getElementById('checkIn').value;
+  const co = document.getElementById('checkOut').value;
+  if(!ci||!co||!selectedRoom) return;
+  const nights = Math.max(1, Math.ceil((new Date(co)-new Date(ci))/(1000*60*60*24)));
+  const total = nights * selectedRoom.price;
+  document.getElementById('nightCount').textContent = `${nights} night${nights>1?'s':''}`;
+  document.getElementById('totalPrice').textContent = `$${total.toLocaleString()}`;
+  document.getElementById('nightSummary').style.display = 'block';
+}
+
+function buildConfirmSummary(){
+  const ci = document.getElementById('checkIn').value;
+  const co = document.getElementById('checkOut').value;
+  const firstName = document.getElementById('guestFirstName').value.trim() || 'Guest';
+  const lastName = document.getElementById('guestLastName').value.trim();
+  const nights = Math.max(1, Math.ceil((new Date(co)-new Date(ci))/(1000*60*60*24)));
+  const total = nights * selectedRoom.price;
+  document.getElementById('confirmSummary').innerHTML = `
+    <div class="confirm-row"><span>Guest</span><span>${`${firstName} ${lastName}`.trim()}</span></div>
+    <div class="confirm-row"><span>Room</span><span>${selectedRoom.name}</span></div>
+    <div class="confirm-row"><span>Check-In</span><span>${ci||'TBD'}</span></div>
+    <div class="confirm-row"><span>Check-Out</span><span>${co||'TBD'}</span></div>
+    <div class="confirm-row"><span>Guests</span><span>${document.getElementById('numGuests').value}</span></div>
+    <div class="confirm-row"><span>Nights</span><span>${nights}</span></div>
+    <div class="confirm-row"><span>Total</span><span>$${total.toLocaleString()}</span></div>
+  `;
+}
+
+function confirmBooking(){
+  const id = 'BK-'+Math.floor(1000+Math.random()*8999);
+  const ci = document.getElementById('checkIn').value;
+  const co = document.getElementById('checkOut').value;
+  const nights = Math.max(1, Math.ceil((new Date(co)-new Date(ci))/(1000*60*60*24)));
+  const totalAmount = nights * selectedRoom.price;
+  const firstName = document.getElementById('guestFirstName').value.trim() || 'Guest';
+  const lastName = document.getElementById('guestLastName').value.trim();
+  const fullName = `${firstName} ${lastName}`.trim();
+  const email = document.getElementById('guestEmail').value.trim() || 'guest@automatex.ai';
+  const phone = document.getElementById('guestPhone').value.trim() || '+94 71 000 0000';
+  currentBookingDetails = {
+    id,
+    guest: fullName,
+    room: selectedRoom.name,
+    checkIn: ci||'—',
+    checkOut: co||'—',
+    total: '$'+totalAmount.toLocaleString(),
+    totalAmount,
+    date: new Date().toLocaleDateString('en-CA'),
+    email,
+    phone
+  };
+  calendarDate = new Date(ci || new Date());
+  selectedCalendarDate = ci || new Date().toISOString().split('T')[0];
+  document.getElementById('bookingIdDisplay').textContent = `Booking ID: ${id}`;
+  renderInvoiceCard();
+  bookingsData.unshift({id,guest:fullName,room:selectedRoom.name,checkIn:ci||'—',checkOut:co||'—',status:'pending',total:'$'+totalAmount.toLocaleString()});
+  if(!customersData.some(c=>c.email.toLowerCase()===email.toLowerCase())){
+    customersData.unshift({name:fullName,email,phone,bookings:1,spent:'$'+totalAmount.toLocaleString(),joined:new Date().toLocaleDateString('en-US',{month:'short',year:'numeric'})});
+  }
+  renderBookingsTable();
+  renderRecentBookings();
+  renderCustomers();
+  renderCalendar();
+  renderAssistantPanel();
+  document.getElementById('statBookings').textContent = 47 + bookingsData.length - BOOKINGS.length + 1;
+  currentStep = 5;
+  updateStepUI();
+  showToast('Booking confirmed successfully!');
+  showLiveNotification(t('bookingCreated'), `${fullName} reserved ${selectedRoom.name} from ${ci} to ${co}.`);
+  animateStatValue('statBookings', 47 + bookingsData.length - BOOKINGS.length + 1);
+}
+
+// ═══ AI RECOMMEND ═══
+function runAIRecommend(){
+  const budget = parseInt(document.getElementById('aibudget').value);
+  const guests = parseInt(document.getElementById('aiguests').value);
+  document.getElementById('aiResult').classList.remove('show');
+  document.getElementById('aiThinking').classList.add('show');
+  setTimeout(()=>{
+    document.getElementById('aiThinking').classList.remove('show');
+    const match = ROOMS.filter(r=>r.available&&r.price<=budget&&r.guests>=guests).sort((a,b)=>b.price-a.price)[0]
+      || ROOMS.filter(r=>r.available).sort((a,b)=>a.price-b.price)[0];
+    document.getElementById('aiRoomName').textContent = `✦ ${match.name} — $${match.price}/night`;
+    document.getElementById('aiReason').textContent = `Based on your budget of $${budget}/night and ${guests} guest${guests>1?'s':''}, this is our best match. It features ${match.features.join(', ')} and is ${match.guests>=guests?'perfectly sized':'available for your party'}. Book now to secure this room!`;
+    document.getElementById('aiResult').classList.add('show');
+  }, 1400);
+}
+
+// ═══ ADMIN PANELS ═══
+function showPanel(name, el){
+  if(currentRole==='staff' && ['rooms','customers','insights'].includes(name)){
+    showToast('Staff access is limited to dashboard, bookings, and calendar.','error');
+    return;
+  }
+  document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const titles = {dashboard:'Dashboard Overview',bookings:'Booking Management',calendar:'Booking Calendar',rooms:'Room Management',customers:'Customer Management',insights:'AI Smart Insights'};
+  document.getElementById('adminTitle').textContent = titles[name]||'';
+  // Close mobile sidebar
+  document.getElementById('adminSidebar').classList.remove('open');
+}
+
+function toggleSidebar(){
+  document.getElementById('adminSidebar').classList.toggle('open');
+}
+
+// ═══ WEEKLY CHART ═══
+function renderChart(){
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const vals = [6,9,7,12,18,15,11];
+  const max = Math.max(...vals);
+  document.getElementById('weeklyChart').innerHTML = days.map((d,i)=>`
+    <div class="bar-wrap">
+      <div class="bar neon" style="height:${(vals[i]/max*100)}%" data-val="${vals[i]} bookings"></div>
+      <div class="bar-label">${d}</div>
+    </div>
+  `).join('');
+}
+
+function animateStatValue(id, endValue, prefix=''){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const start = parseInt(String(el.textContent).replace(/[^\d]/g,'')) || 0;
+  const duration = 900;
+  const startTime = performance.now();
+  function tick(now){
+    const progress = Math.min((now - startTime) / duration, 1);
+    const value = Math.round(start + (endValue - start) * progress);
+    el.textContent = `${prefix}${value}`;
+    if(progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function animateDashboardStats(){
+  animateStatValue('statBookings', bookingsData.length + 41);
+  animateStatValue('statRooms', ROOMS.length + 6);
+  animateStatValue('statCustomers', customersData.length + 177);
+  const revenue = 24.8 + Math.max(0, bookingsData.length - BOOKINGS.length) * 0.3;
+  const revenueEl = document.getElementById('statRevenue');
+  if(revenueEl){
+    const startTime = performance.now();
+    const duration = 1000;
+    function tick(now){
+      const progress = Math.min((now - startTime) / duration, 1);
+      const value = (revenue * progress).toFixed(1);
+      revenueEl.textContent = `$${value}k`;
+      if(progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+}
+
+// ═══ BOOKINGS TABLE ═══
+function renderBookingsTable(){
+  const t = document.getElementById('bookingsTable');
+  if(!t) return;
+  const actionHeader = currentRole === 'staff' ? 'Update Status' : 'Actions';
+  t.innerHTML = `
+    <thead><tr>
+      <th>Booking ID</th><th>Guest</th><th>Room</th><th>Check-In</th><th>Check-Out</th><th>Status</th><th>Total</th><th>${actionHeader}</th>
+    </tr></thead>
+    <tbody>
+      ${bookingsData.map(b=>`
+        <tr>
+          <td><span style="font-family:'Space Mono',monospace;color:var(--neon);font-size:.8rem">${b.id}</span></td>
+          <td>${b.guest}</td>
+          <td>${b.room}</td>
+          <td>${b.checkIn}</td>
+          <td>${b.checkOut}</td>
+          <td><span class="status-badge badge-${b.status}">${b.status}</span></td>
+          <td style="font-family:'Space Mono',monospace;font-size:.85rem">${b.total}</td>
+          <td style="display:flex;gap:6px;margin-top:4px;">
+            <div class="action-btn success" title="Confirm" onclick="updateStatus('${b.id}','confirmed')"><i class="fa fa-check"></i></div>
+            <div class="action-btn danger" title="Cancel" onclick="updateStatus('${b.id}','cancelled')"><i class="fa fa-times"></i></div>
+          </td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+}
+
+function updateStatus(id,status){
+  const b = bookingsData.find(x=>x.id===id);
+  if(b){ b.status=status; renderBookingsTable(); renderRecentBookings(); renderCalendar(); renderAssistantPanel(); showToast(`Booking ${id} marked as ${status}`); }
+}
+
+function filterBookings(q){
+  const filtered = bookingsData.filter(b=>b.guest.toLowerCase().includes(q.toLowerCase())||b.id.toLowerCase().includes(q.toLowerCase())||b.room.toLowerCase().includes(q.toLowerCase()));
+  const t = document.getElementById('bookingsTable');
+  const actionHeader = currentRole === 'staff' ? 'Update Status' : 'Actions';
+  t.innerHTML = `
+    <thead><tr>
+      <th>Booking ID</th><th>Guest</th><th>Room</th><th>Check-In</th><th>Status</th><th>Total</th><th>${actionHeader}</th>
+    </tr></thead>
+    <tbody>
+      ${filtered.map(b=>`
+        <tr>
+          <td><span style="font-family:'Space Mono',monospace;color:var(--neon);font-size:.8rem">${b.id}</span></td>
+          <td>${b.guest}</td><td>${b.room}</td><td>${b.checkIn}</td>
+          <td><span class="status-badge badge-${b.status}">${b.status}</span></td>
+          <td style="font-family:'Space Mono',monospace;font-size:.85rem">${b.total}</td>
+          <td><div class="action-btn danger" onclick="updateStatus('${b.id}','cancelled')"><i class="fa fa-times"></i></div></td>
+        </tr>
+      `).join('')}
+    </tbody>`;
+}
+
+// ═══ RECENT BOOKINGS (MINI) ═══
+function renderRecentBookings(){
+  const t = document.getElementById('recentBookingsTable');
+  if(!t) return;
+  const recent = bookingsData.slice(0,5);
+  t.innerHTML = `
+    <thead><tr><th>Booking ID</th><th>Guest</th><th>Room</th><th>Status</th><th>Total</th></tr></thead>
+    <tbody>
+      ${recent.map(b=>`
+        <tr>
+          <td><span style="font-family:'Space Mono',monospace;color:var(--neon);font-size:.8rem">${b.id}</span></td>
+          <td>${b.guest}</td><td>${b.room}</td>
+          <td><span class="status-badge badge-${b.status}">${b.status}</span></td>
+          <td style="font-family:'Space Mono',monospace;font-size:.85rem">${b.total}</td>
+        </tr>
+      `).join('')}
+    </tbody>`;
+}
+
+// ═══ ADMIN ROOMS ═══
+function renderAdminRooms(){
+  const g = document.getElementById('adminRoomsGrid');
+  if(!g) return;
+  g.innerHTML = ROOMS.map(r=>`
+    <div class="room-admin-card">
+      <div class="room-admin-img">${getRoomVisualMarkup(r,'room-admin-photo')}</div>
+      <div class="room-admin-body">
+        <h4>${r.name}</h4>
+        <p>${r.desc}</p>
+        <p style="margin-bottom:8px"><span class="status-badge ${r.available?'badge-available':'badge-occupied'}">${r.available?'Available':'Occupied'}</span></p>
+        <div class="room-admin-footer">
+          <div class="room-admin-price">$${r.price}<span style="font-size:.7rem;color:var(--text3)">/night</span></div>
+          <div class="room-actions">
+            <div class="action-btn" title="Edit" onclick="showToast('Edit feature coming soon','success')"><i class="fa fa-pen"></i></div>
+            <div class="action-btn danger" title="Delete" onclick="deleteRoom(${r.id})"><i class="fa fa-trash"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function deleteRoom(id){
+  const idx = ROOMS.findIndex(r=>r.id===id);
+  if(idx>-1){ ROOMS.splice(idx,1); renderAdminRooms(); renderRooms(); showToast('Room deleted'); }
+}
+
+// ═══ ADD ROOM MODAL ═══
+function showAddRoomModal(){ document.getElementById('addRoomModal').classList.add('open'); }
+function closeAddRoom(){ document.getElementById('addRoomModal').classList.remove('open'); }
+function addRoom(){
+  const name = document.getElementById('newRoomName').value.trim();
+  const price = parseInt(document.getElementById('newRoomPrice').value)||100;
+  const guests = parseInt(document.getElementById('newRoomGuests').value)||2;
+  const desc = document.getElementById('newRoomDesc').value.trim()||'A beautiful room with premium amenities.';
+  const emoji = document.getElementById('newRoomEmoji').value;
+  if(!name){ showToast('Please enter a room name','error'); return; }
+  const newRoom = {id:Date.now(),name,price,guests,desc,emoji,features:['WiFi','AC','TV'],available:true,badge:'New'};
+  ROOMS.push(newRoom);
+  renderRooms();
+  renderAdminRooms();
+  closeAddRoom();
+  showToast(`Room "${name}" added successfully!`);
+}
+
+// ═══ CUSTOMERS TABLE ═══
+function renderCustomers(){
+  const t = document.getElementById('customersTable');
+  if(!t) return;
+  t.innerHTML = `
+    <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Bookings</th><th>Total Spent</th><th>Joined</th><th>Actions</th></tr></thead>
+    <tbody>
+      ${customersData.map(c=>`
+        <tr>
+          <td style="font-weight:600">${c.name}</td>
+          <td style="color:var(--text2)">${c.email}</td>
+          <td style="color:var(--text2)">${c.phone}</td>
+          <td style="font-family:'Space Mono',monospace;color:var(--neon)">${c.bookings}</td>
+          <td style="font-family:'Space Mono',monospace">${c.spent}</td>
+          <td style="color:var(--text3)">${c.joined}</td>
+          <td><div class="action-btn" onclick="showToast('Viewing ${c.name} history')"><i class="fa fa-eye"></i></div></td>
+        </tr>
+      `).join('')}
+    </tbody>`;
+}
+
+// ═══ ALERTS ═══
+function renderAlerts(){
+  const el = document.getElementById('alertsList');
+  if(!el) return;
+  const alerts = [
+    {dot:'var(--neon3)',text:'Standard Room has 40% occupancy — 3 available nights this week',time:'2h ago'},
+    {dot:'var(--gold)',text:'Mountain Retreat occupancy dropped to 55% — consider promotion',time:'5h ago'},
+    {dot:'var(--neon)',text:'Presidential Suite fully booked for next 2 weeks — excellent!',time:'1d ago'},
+    {dot:'#00ff88',text:'Revenue target 78% achieved — on track for monthly goal',time:'2d ago'},
+  ];
+  el.innerHTML = alerts.map(a=>`
+    <div class="alert-item">
+      <div class="alert-dot" style="background:${a.dot}"></div>
+      <span class="alert-text">${a.text}</span>
+      <span class="alert-time">${a.time}</span>
+    </div>
+  `).join('');
+}
+
+function renderAssistantPanel(){
+  const assistant = document.getElementById('assistantInsights');
+  const watchlist = document.getElementById('insightWatchlist');
+  const pricingMessage = document.getElementById('smartPricingMessage');
+  const avgReviewEl = document.getElementById('avgReviewInsight');
+  const avgReviewSub = document.getElementById('avgReviewInsightSub');
+  const allReviews = Object.values(reviewsData).flat();
+  const avgReview = allReviews.length ? (allReviews.reduce((sum,r)=>sum+r.rating,0) / allReviews.length).toFixed(1) : '5.0';
+  const today = new Date().toISOString().split('T')[0];
+  const todaysBookings = bookingsData.filter(b=>b.checkIn === today).length;
+  const peakDay = getPeakBookingDay();
+  const lowOccupancyRoom = ROOMS.map(room=>({
+    name: room.name,
+    count: bookingsData.filter(b=>b.room === room.name && b.status !== 'cancelled').length
+  })).sort((a,b)=>a.count-b.count)[0];
+  if(assistant){
+    assistant.innerHTML = `
+      <div class="assistant-insight"><strong>You have ${todaysBookings} bookings today</strong><span>Front desk and housekeeping can prepare based on live arrivals.</span></div>
+      <div class="assistant-insight"><strong>Peak booking day: ${peakDay}</strong><span>Use campaigns and premium pricing to maximize conversion on your strongest demand day.</span></div>
+      <div class="assistant-insight"><strong>Low occupancy alert for ${lowOccupancyRoom?.name || 'Room 3'}</strong><span>Promote this room with add-ons or short-stay offers to improve conversion.</span></div>
+    `;
+  }
+  if(watchlist){
+    watchlist.innerHTML = `
+      <div class="assistant-insight"><strong>Pricing signal</strong><span>${getPricingInsight()}</span></div>
+      <div class="assistant-insight"><strong>Guest sentiment</strong><span>Average review score is ${avgReview}/5 across ${allReviews.length} published reviews.</span></div>
+      <div class="assistant-insight"><strong>Operational note</strong><span>${bookingsData.filter(b=>b.status==='pending').length} bookings are still pending confirmation.</span></div>
+    `;
+  }
+  if(pricingMessage) pricingMessage.textContent = getPricingInsight();
+  if(avgReviewEl) avgReviewEl.textContent = `${avgReview} / 5`;
+  if(avgReviewSub) avgReviewSub.textContent = `Based on ${allReviews.length} reviews`;
+}
+
+function submitReview(roomId){
+  const rating = parseInt(document.getElementById(`reviewRating${roomId}`).value, 10);
+  const commentInput = document.getElementById(`reviewComment${roomId}`);
+  const comment = commentInput.value.trim();
+  if(!comment){
+    showToast('Please enter a review comment.','error');
+    return;
+  }
+  if(!reviewsData[roomId]) reviewsData[roomId] = [];
+  reviewsData[roomId].unshift({name:'Recent Guest', rating, comment});
+  commentInput.value = '';
+  renderRooms();
+  renderAssistantPanel();
+  showToast('Review submitted successfully!');
+}
+
+function downloadCSV(filename, rows){
+  const csv = rows.map(row=>row.map(value=>`"${String(value).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function exportBookingsCSV(){
+  const rows = [['Booking ID','Guest','Room','Check-In','Check-Out','Status','Total'], ...bookingsData.map(b=>[b.id,b.guest,b.room,b.checkIn,b.checkOut,b.status,b.total])];
+  downloadCSV('automatex-bookings.csv', rows);
+  showToast('Bookings CSV exported.');
+}
+
+function exportCustomersCSV(){
+  const rows = [['Name','Email','Phone','Bookings','Spent','Joined'], ...customersData.map(c=>[c.name,c.email,c.phone,c.bookings,c.spent,c.joined])];
+  downloadCSV('automatex-customers.csv', rows);
+  showToast('Customers CSV exported.');
+}
+
+function toggleDemoMode(){
+  demoModeEnabled = !demoModeEnabled;
+  const label = document.querySelector('#demoModeBtn span');
+  if(label) label.textContent = demoModeEnabled ? t('disableDemoMode') : t('enableDemoMode');
+  document.getElementById('demoModeBtn').classList.toggle('active', demoModeEnabled);
+  if(demoModeEnabled){
+    const samples = [
+      {guest:'Demo Guest A',room:'Deluxe Sea View',checkIn:'2026-04-24',checkOut:'2026-04-26',status:'confirmed',total:'$378'},
+      {guest:'Demo Guest B',room:'Garden Sanctuary',checkIn:'2026-04-25',checkOut:'2026-04-27',status:'pending',total:'$238'}
+    ];
+    samples.forEach((sample,index)=>{
+      bookingsData.unshift({id:`BK-D${Date.now().toString().slice(-4)}${index}`, ...sample});
+    });
+    demoInterval = setInterval(()=>{
+      const room = ROOMS[Math.floor(Math.random()*ROOMS.length)];
+      const start = new Date();
+      start.setDate(start.getDate() + Math.floor(Math.random()*7));
+      const end = new Date(start);
+      end.setDate(end.getDate() + 2);
+      const id = `BK-${Math.floor(1000+Math.random()*8999)}`;
+      const booking = {
+        id,
+        guest:'Demo Walk-in',
+        room:room.name,
+        checkIn:start.toISOString().split('T')[0],
+        checkOut:end.toISOString().split('T')[0],
+        status:'confirmed',
+        total:`$${room.price*2}`
+      };
+      bookingsData.unshift(booking);
+      showLiveNotification('Demo activity', `${booking.guest} booked ${booking.room}.`);
+      renderBookingsTable();
+      renderRecentBookings();
+      renderCalendar();
+      renderAssistantPanel();
+    }, 9000);
+    showToast(t('demoEnabled'));
+  } else {
+    clearInterval(demoInterval);
+    demoInterval = null;
+    showToast(t('demoDisabled'));
+  }
+  renderBookingsTable();
+  renderRecentBookings();
+  renderCalendar();
+  renderAssistantPanel();
+}
+
+function attachRippleEffects(){
+  document.querySelectorAll('button,.toolbar-btn,.btn-book,.btn-next,.btn-back').forEach(btn=>{
+    if(btn.dataset.rippleBound) return;
+    btn.dataset.rippleBound = 'true';
+    btn.addEventListener('click', addRippleEffect);
+  });
+}
+
+function applyRoleAccess(){
+  document.querySelectorAll('[data-role-only="admin"]').forEach(el=>{
+    el.classList.toggle('hidden-by-role', currentRole !== 'admin');
+  });
+  document.getElementById('rolePill').textContent = currentRole === 'admin' ? 'Admin Access' : 'Staff Access';
+  const avatar = document.querySelector('.admin-avatar');
+  avatar.textContent = currentRole === 'admin' ? 'AX' : 'ST';
+  avatar.title = currentUserName;
+  if(currentRole === 'staff'){
+    showPanel('bookings', document.querySelector('.sidebar-item[onclick*="bookings"]'));
+  } else {
+    showPanel('dashboard', document.querySelector('.sidebar-item[onclick*="dashboard"]'));
+  }
+}
+
+function renderInvoiceCard(){
+  if(!currentBookingDetails) return;
+  document.getElementById('invoiceCard').innerHTML = `
+    <div class="invoice-head">
+      <div class="invoice-brand">
+        <h4>AutomateX Demo Hotel</h4>
+        <p>Invoice generated automatically after booking confirmation.</p>
+      </div>
+      <div class="invoice-meta">
+        <div class="invoice-badge"><i class="fa fa-file-invoice"></i>Invoice Ready</div>
+      </div>
+    </div>
+    <div class="invoice-body">
+      <div class="invoice-row"><span>Booking ID</span><strong>${currentBookingDetails.id}</strong></div>
+      <div class="invoice-row"><span>Customer Name</span><strong>${currentBookingDetails.guest}</strong></div>
+      <div class="invoice-row"><span>Room Name</span><strong>${currentBookingDetails.room}</strong></div>
+      <div class="invoice-row"><span>Check-In</span><strong>${currentBookingDetails.checkIn}</strong></div>
+      <div class="invoice-row"><span>Check-Out</span><strong>${currentBookingDetails.checkOut}</strong></div>
+      <div class="invoice-row"><span>Issued Date</span><strong>${currentBookingDetails.date}</strong></div>
+      <div class="invoice-total">
+        <div class="invoice-row"><span>Total Amount</span><strong>${currentBookingDetails.total}</strong></div>
+      </div>
+    </div>
+  `;
+}
+
+function downloadInvoice(){
+  if(!currentBookingDetails) return;
+  const popup = window.open('', '_blank', 'width=900,height=700');
+  if(!popup){
+    showToast('Please allow popups to download the invoice.','error');
+    return;
+  }
+  popup.document.write(`
+    <html>
+      <head>
+        <title>${currentBookingDetails.id} Invoice</title>
+        <style>
+          body{font-family:Arial,sans-serif;background:#eef4f8;padding:40px;color:#122033;}
+          .sheet{max-width:760px;margin:0 auto;background:#fff;border-radius:20px;padding:40px;box-shadow:0 24px 80px rgba(10,20,40,.12);}
+          .head{display:flex;justify-content:space-between;gap:20px;padding-bottom:20px;border-bottom:1px solid #dbe7f0;margin-bottom:28px;}
+          .hotel{font-size:30px;font-weight:700;margin:0 0 8px;}
+          .muted{color:#5f7488;font-size:14px;}
+          .row{display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px dashed #dbe7f0;font-size:15px;}
+          .row strong{color:#08131f;}
+          .total{margin-top:18px;padding:18px 20px;border-radius:16px;background:#f4fbff;border:1px solid #cdeffc;}
+          .actions{margin-top:30px;}
+          button{background:#08131f;color:#fff;border:none;padding:14px 22px;border-radius:999px;cursor:pointer;}
+          @media print{body{background:#fff;padding:0}.sheet{box-shadow:none;border-radius:0;max-width:none}button{display:none}}
+        </style>
+      </head>
+      <body>
+        <div class="sheet">
+          <div class="head">
+            <div>
+              <p class="hotel">AutomateX Demo Hotel</p>
+              <div class="muted">AI Hotel Management Invoice</div>
+            </div>
+            <div class="muted">Booking Invoice<br>${currentBookingDetails.date}</div>
+          </div>
+          <div class="row"><span>Booking ID</span><strong>${currentBookingDetails.id}</strong></div>
+          <div class="row"><span>Customer Name</span><strong>${currentBookingDetails.guest}</strong></div>
+          <div class="row"><span>Room Name</span><strong>${currentBookingDetails.room}</strong></div>
+          <div class="row"><span>Check-In</span><strong>${currentBookingDetails.checkIn}</strong></div>
+          <div class="row"><span>Check-Out</span><strong>${currentBookingDetails.checkOut}</strong></div>
+          <div class="total"><div class="row" style="border:none;padding:0"><span>Total Amount</span><strong>${currentBookingDetails.total}</strong></div></div>
+          <div class="actions"><button onclick="window.print()">Download Invoice</button></div>
+        </div>
+      </body>
+    </html>
+  `);
+  popup.document.close();
+}
+
+function sendViaWhatsApp(){
+  if(!currentBookingDetails) return;
+  const msg = `Hello, your booking (${currentBookingDetails.id}) is confirmed from ${currentBookingDetails.checkIn} to ${currentBookingDetails.checkOut}. Thank you for choosing us.`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank','noopener');
+}
+
+function getBookingsForDate(dateStr){
+  return bookingsData.filter(b=>dateStr >= b.checkIn && dateStr < b.checkOut);
+}
+
+function changeCalendarMonth(delta){
+  calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + delta, 1);
+  renderCalendar();
+}
+
+function selectCalendarDate(dateStr){
+  selectedCalendarDate = dateStr;
+  renderCalendar();
+}
+
+function renderCalendar(){
+  const grid = document.getElementById('calendarGrid');
+  const label = document.getElementById('calendarMonthLabel');
+  const dayLabel = document.getElementById('calendarSelectedDateLabel');
+  const list = document.getElementById('dayBookingsList');
+  if(!grid || !label || !dayLabel || !list) return;
+  const year = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
+  const monthKey = `${year}-${String(month+1).padStart(2,'0')}`;
+  label.textContent = calendarDate.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+  const todayKey = new Date().toISOString().split('T')[0];
+  if(!selectedCalendarDate || !selectedCalendarDate.startsWith(monthKey)){
+    const availableDates = bookingsData.map(b=>b.checkIn).filter(d=>d.startsWith(monthKey));
+    selectedCalendarDate = availableDates[0] || `${monthKey}-01`;
+  }
+  grid.innerHTML = Array.from({length: totalCells}, (_, index)=>{
+    const dayNum = index - firstDay + 1;
+    if(dayNum < 1 || dayNum > daysInMonth){
+      return `<div class="calendar-day muted"></div>`;
+    }
+    const dateStr = `${monthKey}-${String(dayNum).padStart(2,'0')}`;
+    const dayBookings = getBookingsForDate(dateStr);
+    const isActive = selectedCalendarDate === dateStr;
+    const occupancy = Math.min(ROOMS.length, dayBookings.length);
+    return `
+      <div class="calendar-day ${dayBookings.length ? 'has-bookings' : ''} ${isActive ? 'active' : ''}" onclick="selectCalendarDate('${dateStr}')">
+        <div class="calendar-day-number">${dayNum}${dateStr === todayKey ? ' •' : ''}</div>
+        <div class="occupancy-strip">${Array.from({length: Math.min(6,ROOMS.length)}, (_,i)=>`<span class="occupancy-dot ${i < occupancy ? 'filled' : ''}"></span>`).join('')}</div>
+        <div class="calendar-day-count">${dayBookings.length ? `${dayBookings.length} booking${dayBookings.length>1?'s':''}` : 'Available'}</div>
+      </div>
+    `;
+  }).join('');
+  const selectedBookings = getBookingsForDate(selectedCalendarDate);
+  dayLabel.textContent = `${new Date(selectedCalendarDate).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})} • ${selectedBookings.length} active booking${selectedBookings.length!==1?'s':''}`;
+  list.innerHTML = selectedBookings.length ? selectedBookings.map(b=>`
+    <div class="day-booking-item">
+      <h4>${b.room}</h4>
+      <p><strong style="color:var(--text)">${b.guest}</strong> • ${b.id}</p>
+      <p>${b.checkIn} to ${b.checkOut} • <span class="status-badge badge-${b.status}">${b.status}</span></p>
+    </div>
+  `).join('') : `<div class="day-booking-item"><h4>No bookings on this date</h4><p>All rooms are currently open for new reservations.</p></div>`;
+  const occupancyPercent = Math.round((selectedBookings.length / Math.max(ROOMS.length,1)) * 100);
+  document.getElementById('calendarOccupancyLabel').textContent = `Occupancy ${occupancyPercent}%`;
+}
+
+// ═══ LOGIN ═══
+const CREDENTIALS = {
+  'admin@automatex.ai':{pass:'admin123',role:'admin'},
+  'staff@automatex.ai':{pass:'staff123',role:'staff'},
+};
+let currentTab = 'admin';
+function switchTab(t){
+  currentTab=t;
+  document.getElementById('tabAdmin').classList.toggle('active',t==='admin');
+  document.getElementById('tabStaff').classList.toggle('active',t==='staff');
+  if(t==='admin'){
+    document.getElementById('loginEmail').value='admin@automatex.ai';
+    document.getElementById('loginPass').value='admin123';
+  } else {
+    document.getElementById('loginEmail').value='staff@automatex.ai';
+    document.getElementById('loginPass').value='staff123';
+  }
+}
+function doLogin(){
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  const user = CREDENTIALS[email];
+  if(user&&user.pass===pass){
+    currentRole = user.role;
+    currentUserName = user.role === 'admin' ? 'Admin User' : 'Front Desk Staff';
+    applyRoleAccess();
+    switchPage('adminPage');
+    showToast(`Welcome back, ${user.role === 'admin' ? 'Admin' : 'Staff'}!`);
+  } else {
+    showToast('Invalid credentials. Try demo logins.','error');
+  }
+}
+
+// ═══ CHATBOT ═══
+const botKnowledge = {
+  'room':()=>`We have ${ROOMS.length} room types: ${ROOMS.map(r=>r.name).join(', ')}. Each uniquely designed for luxury. Want details on any?`,
+  'price':()=>`Our room prices range from $${Math.min(...ROOMS.map(r=>r.price))}/night to $${Math.max(...ROOMS.map(r=>r.price))}/night. Our most popular is the Deluxe Sea View at $189/night.`,
+  'book':()=>'To book, simply browse our rooms section, click "Book Now" on your chosen room, and follow the 4-step process. It takes under 2 minutes!',
+  'wifi':()=>'Yes! High-speed WiFi (up to 500 Mbps) is complimentary in all rooms and common areas.',
+  'cancel':()=>'You can cancel your booking up to 48 hours before check-in for a full refund. Contact us at hello@automatex.ai.',
+  'breakfast':()=>'Complimentary breakfast is included with Deluxe and above room categories. Our restaurant opens at 7 AM.',
+  'pool':()=>'The Presidential Suite includes a private pool. We also have a shared rooftop infinity pool open 7 AM–10 PM.',
+  'check':()=>'Check-in time is 3:00 PM and check-out is 11:00 AM. Early check-in and late check-out may be available on request.',
+  'spa':()=>'Yes! Our full-service spa is available for all guests. Spa access is complimentary for Suite bookings.',
+  'parking':()=>'Complimentary parking is available for all hotel guests — both open-air and covered options.',
+};
+
+function getChatResponse(msg){
+  const m = msg.toLowerCase();
+  for(const [k,fn] of Object.entries(botKnowledge)){
+    if(m.includes(k)) return fn();
+  }
+  if(m.includes('hello')||m.includes('hi')) return "Hello! Welcome to AutomateX Hotel. I'm your AI concierge — how can I help you today? 🌟";
+  if(m.includes('thank')) return "You're most welcome! Is there anything else I can help you with? 😊";
+  if(m.includes('available')) return `We currently have ${ROOMS.filter(r=>r.available).length} rooms available. Would you like me to help you find the best match?`;
+  return "Great question! I can help with room information, pricing, booking process, amenities, and more. What would you like to know? 🤖";
+}
+
+function toggleChat(){
+  const w = document.getElementById('chatWindow');
+  const f = document.getElementById('chatFab');
+  const open = w.classList.toggle('open');
+  f.classList.toggle('open', open);
+  f.innerHTML = open ? '<i class="fa fa-times"></i>' : '<i class="fa fa-comments"></i>';
+  if(open && document.getElementById('chatMessages').children.length===0){
+    addBotMsg("👋 Hello! I'm AutomateX AI, your personal hotel concierge. Ask me about rooms, prices, amenities, or anything else!");
+  }
+}
+
+function addBotMsg(txt){
+  const m = document.getElementById('chatMessages');
+  const d = document.createElement('div');
+  d.className='msg bot';
+  d.textContent=txt;
+  m.appendChild(d);
+  m.scrollTop=m.scrollHeight;
+}
+
+function addUserMsg(txt){
+  const m = document.getElementById('chatMessages');
+  const d = document.createElement('div');
+  d.className='msg user';
+  d.textContent=txt;
+  m.appendChild(d);
+  m.scrollTop=m.scrollHeight;
+}
+
+function sendChat(){
+  const inp = document.getElementById('chatInput');
+  const msg = inp.value.trim();
+  if(!msg) return;
+  addUserMsg(msg);
+  inp.value='';
+  document.getElementById('chatQuick').style.display='none';
+  setTimeout(()=>addBotMsg(getChatResponse(msg)), 600);
+}
+
+function sendQuick(msg){
+  addUserMsg(msg);
+  document.getElementById('chatQuick').style.display='none';
+  setTimeout(()=>addBotMsg(getChatResponse(msg)), 600);
+}
+
+// ═══ SCROLL ANIMATIONS ═══
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity='1';
+      e.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:.1});
+
+function setupScrollAnimations(){
+  document.querySelectorAll('.room-card,.feature-card,.stat-chip').forEach(el=>{
+    el.style.opacity='0';
+    el.style.transform='translateY(30px)';
+    el.style.transition='opacity .6s ease, transform .6s cubic-bezier(.23,1,.32,1)';
+    observer.observe(el);
+  });
+}
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded',()=>{
+  setLanguage('en');
+  renderRooms();
+  renderChart();
+  renderBookingsTable();
+  renderRecentBookings();
+  renderAdminRooms();
+  renderCustomers();
+  renderAlerts();
+  renderCalendar();
+  renderAssistantPanel();
+  applyRoleAccess();
+  attachRippleEffects();
+  setTimeout(animateDashboardStats, 250);
+  setTimeout(setupScrollAnimations, 100);
+  // Set today dates
+  const today = new Date().toISOString().split('T')[0];
+  const tomorrow = new Date(Date.now()+86400000).toISOString().split('T')[0];
+  document.getElementById('checkIn').value = today;
+  document.getElementById('checkOut').value = tomorrow;
+  updateNightSummary();
+});
+
+// Close modal on overlay click
+document.getElementById('bookingModal').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+document.getElementById('addRoomModal').addEventListener('click',function(e){
+  if(e.target===this) closeAddRoom();
+});
+</script>
+</body>
+</html>
